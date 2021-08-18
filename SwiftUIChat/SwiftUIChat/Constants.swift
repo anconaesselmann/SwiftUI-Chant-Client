@@ -4,6 +4,7 @@
 import Foundation
 
 struct Constants {
-    static let socketUrlString = URL(string: "135.180.65.243")! // URL(string: "127.0.0.1")!
-    static let socketPort: UInt32 = 20212 // 1234
+//    static let socketUrlString = URL(string: "127.0.0.1")!
+    static let socketUrlString = URL(string: "135.180.65.243")!
+    static let socketPort: UInt32 = 20212
 }

@@ -4,7 +4,7 @@
 import Foundation
 import Combine
 
-class ChatRoom: ObservableObject {
+class ChatRoom: ObservableObject, ChatRoomProtocol {
 
     enum Status {
         case notConnected
@@ -26,54 +26,40 @@ class ChatRoom: ObservableObject {
     private var user: User?
 
     deinit {
-        print("Closing sockets")
         stopChatSession()
     }
 
-    let socket = Socket()
+    private let socket = Socket()
 
-    var subscription: AnyCancellable?
+    private var subscriptions = Set<AnyCancellable>()
 
-    var connected = false
+    private var connected = false
 
     init() {
-        subscription = socket.event
+        socket.event
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
-                guard let strongSelf = self else {
-                    return
-                }
-                switch event {
-                case .openCompleted:
-                    print("openCompleted")
-                case .data(let data):
-                    print("Data recieved: \(String(data: data, encoding: .utf8) ?? "")")
-                    guard let message = strongSelf.messageFromData(data) else {
-                        return
-                    }
-                    strongSelf.history.append(message)
-                case .bytesWritten(let bytesWritten):
-                    print("Bytes written: \(bytesWritten)")
-                case .hasSpaceAvailable:
-                    print("hasSpaceAvailable")
-                case .error(let error):
-                    print(error)
-                    strongSelf.connected = false
-                case .endEncountered:
-                    print("endEncountered")
-                case .other(let eventCode):
-                    if eventCode.rawValue == 1 {
-                        print("Connected")
-                        strongSelf.status = .connected
-                        strongSelf.connected = true
-                    } else {
-                        print("other event: \(eventCode)")
-                    }
-                }
-            }
-    }
+                self?.eventReceived(event)
 
-    func header(for string: String) -> String {
-        return String(Array("\(string.count)          ")[..<10])
+            }.store(in: &subscriptions)
+
+        socket.status
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                switch status {
+                case .notInitialized, .disconnected:
+                    self?.status = .notConnected
+                    self?.connected = false
+                case .connected:
+                    self?.status = .connected
+                    self?.connected = true
+                case .notConnectedWithError(let error):
+                    self?.status = .error(.error(error))
+                    self?.connected = false
+                }
+            }.store(in: &subscriptions)
     }
 
     func joinChat(with user: User) {
@@ -81,13 +67,13 @@ class ChatRoom: ObservableObject {
             return
         }
         self.user = user
-        socket.open(url: Constants.socketUrlString, socket: Constants.socketPort)
-        let message = header(for: user.name) + user.name
+        self.socket.open(url: Constants.socketUrlString, socket: Constants.socketPort)
+        let message = Self.header(for: user.name) + user.name
 
         guard let data = message.data(using: .utf8) else {
             return
         }
-        socket.write(data: data)
+        self.socket.write(data: data)
     }
 
     func send(message body: String) {
@@ -101,16 +87,33 @@ class ChatRoom: ObservableObject {
             status = .error(.couldNotSendMessage)
             return
         }
-        let messageString = header(for: jsonString) + jsonString
+        let messageString = Self.header(for: jsonString) + jsonString
         guard let data = messageString.data(using: .utf8) else {
             return
         }
-        socket.write(data: data)
+        self.socket.write(data: data)
         history.append(message)
     }
 
     func stopChatSession() {
         socket.close()
+    }
+
+    private static func header(for string: String) -> String {
+        return String(Array("\(string.count)          ")[..<10])
+    }
+
+    private func eventReceived(_ event: Socket.Event) {
+        switch event {
+        case .data(let data):
+            guard let message = messageFromData(data) else {
+                return
+            }
+            history.append(message)
+        case .bytesWritten: ()
+        case .error(let error):
+            status = .error(.error(error))
+        }
     }
 
     private func messageFromData(_ data: Data) -> Message? {

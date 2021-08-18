@@ -16,7 +16,6 @@ extension Message {
     }
 }
 
-
 struct MessageView: View {
     let message: MessageViewData
 
@@ -25,7 +24,7 @@ struct MessageView: View {
             switch message.type {
             case .sent:
                 HStack {
-                    Color(.white).frame(width: 20)
+                    Color.background.frame(width: 20)
                     VStack(alignment: .trailing, spacing: 0, content: {
                         Text(message.dateString).padding([.top, .leading, .trailing], 16.0)
                         Text(message.body).padding(16)
@@ -42,10 +41,10 @@ struct MessageView: View {
                     })
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     .background(Color(.gray).cornerRadius(20))
-                    Color(.white).frame(width: 20)
+                    Color.background.frame(width: 20)
                 }
             }
-        }
+        }.background(Color.background)
     }
 }
 
@@ -54,12 +53,22 @@ struct MessageView_Previews: PreviewProvider {
     static let messageSent = Message(uuid: UUID(), date: Date(), user: user, body: "Hello World").viewData(given: user)
     static let messageRecieved = Message(uuid: UUID(), date: Date(), user: User(name: "sam"), body: "Hello World back").viewData(given: user)
     static var previews: some View {
-        VStack {
-            MessageView(message: messageSent)
-                .frame(width: 300, height: 100)
-            MessageView(message: messageRecieved)
-                .frame(width: 300, height: 100)
+        Group {
+            VStack {
+                MessageView(message: messageSent)
+                    .frame(width: 300, height: 100)
+                MessageView(message: messageRecieved)
+                    .frame(width: 300, height: 100)
+            }
+            .previewLayout(.sizeThatFits)
+            VStack {
+                MessageView(message: messageSent)
+                    .frame(width: 300, height: 100)
+                MessageView(message: messageRecieved)
+                    .frame(width: 300, height: 100)
+            }
+            .preferredColorScheme(.dark)
+            .previewLayout(.sizeThatFits)
         }
-        .previewLayout(.sizeThatFits)
     }
 }

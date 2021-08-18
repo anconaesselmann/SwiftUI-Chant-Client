@@ -8,12 +8,13 @@ struct ContentView: View {
     var body: some View {
         NavigationView(content: {
             LoginView()
-        })
+        }).background(Color.background)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .preferredColorScheme(.dark)
     }
 }

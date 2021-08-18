@@ -7,13 +7,16 @@ import Combine
 class Socket: NSObject {
 
     enum Event {
-        case openCompleted
         case data(Data)
         case bytesWritten(Int)
-        case hasSpaceAvailable
         case error(Error)
-        case endEncountered
-        case other(Stream.Event)
+    }
+
+    enum Status {
+        case notInitialized
+        case connected
+        case disconnected
+        case notConnectedWithError(Error)
     }
 
     enum SocketError: Error {
@@ -28,18 +31,32 @@ class Socket: NSObject {
         self.maxReadLength = maxReadLength
     }
 
+    private let eventSubject = PassthroughSubject<Event, Never>()
+    private let statusSubject = CurrentValueSubject<Status, Never>(.notInitialized)
+
+    var status: AnyPublisher<Status, Never> {
+        statusSubject.eraseToAnyPublisher()
+    }
+
     var event: AnyPublisher<Event, Never> {
         eventSubject.eraseToAnyPublisher()
     }
 
-    private let eventSubject = PassthroughSubject<Event, Never>()
+    private var inputStream: InputStream? {
+        didSet {
+            inputStream?.delegate = self
+        }
+    }
+    private var outputStream: OutputStream? {
+        didSet {
+            outputStream?.delegate = self
+        }
+    }
 
-    private var inputStream: InputStream?
-    private var outputStream: OutputStream?
+    var socketAccesQueue = DispatchQueue.global()
 
     func open(url: URL, socket: UInt32) {
-        inputStream?.close()
-        outputStream?.close()
+        close()
         var readStream: Unmanaged<CFReadStream>?
         var writeStream: Unmanaged<CFWriteStream>?
 
@@ -51,23 +68,30 @@ class Socket: NSObject {
             &writeStream
         )
         let inputStream: InputStream? = readStream?.takeRetainedValue()
-        inputStream?.delegate = self
         let outputStream: OutputStream? = writeStream?.takeRetainedValue()
-        inputStream?.delegate = self
+
+        self.inputStream = inputStream
+        self.outputStream = outputStream
 
         inputStream?.schedule(in: .current, forMode: .common)
         outputStream?.schedule(in: .current, forMode: .common)
 
         inputStream?.open()
         outputStream?.open()
-
-        self.inputStream = inputStream
-        self.outputStream = outputStream
+        if let error = inputStream?.streamError {
+            statusSubject.send(.notConnectedWithError(error))
+        } else {
+            statusSubject.send(.connected)
+        }
     }
 
     func close() {
+        print("Closing sockets")
         inputStream?.close()
         outputStream?.close()
+        inputStream = nil
+        outputStream = nil
+        statusSubject.send(.disconnected)
     }
 
     func write(data: Data) {
@@ -81,7 +105,13 @@ class Socket: NSObject {
                 return
             }
             let bytesWritten = outputStream.write(pointer, maxLength: data.count)
-            eventSubject.send(.bytesWritten(bytesWritten))
+            if bytesWritten > 0 {
+                eventSubject.send(.bytesWritten(bytesWritten))
+            } else if let error = outputStream.streamError {
+                eventSubject.send(.error(error))
+            } else {
+                eventSubject.send(.error(SocketError.couldNotWriteData))
+            }
         }
     }
 
@@ -116,21 +146,19 @@ class Socket: NSObject {
 
 extension Socket: StreamDelegate {
     func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+        print("Event: \(eventCode)")
         switch eventCode {
         case .hasBytesAvailable:
             if let inputStream = aStream as? InputStream {
                 readAvailableBytes(stream: inputStream)
             }
-        case .endEncountered:
-            eventSubject.send(.endEncountered)
         case .errorOccurred:
             if let error = aStream.streamError {
+                print("error: \(error)")
                 eventSubject.send(.error(error))
+                statusSubject.send(.notConnectedWithError(error))
             }
-        case .hasSpaceAvailable:
-            eventSubject.send(.hasSpaceAvailable)
-        default:
-            eventSubject.send(.other(eventCode))
+        default: ()
         }
     }
 }
