@@ -29,6 +29,11 @@
 		97CAF43926CCF62600B5DA23 /* MessageHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43826CCF62600B5DA23 /* MessageHistory.swift */; };
 		97CAF43B26CCF65700B5DA23 /* ChatViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */; };
 		97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43E26CCFC5200B5DA23 /* Mocks.swift */; };
+		97CAF44226CDC91300B5DA23 /* DateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44126CDC91300B5DA23 /* DateHeaderView.swift */; };
+		97CAF44426CDC96C00B5DA23 /* FromView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44326CDC96C00B5DA23 /* FromView.swift */; };
+		97CAF44626CDCF7900B5DA23 /* MessageViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */; };
+		97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */; };
+		97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44926CDD29700B5DA23 /* MessageViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +82,11 @@
 		97CAF43826CCF62600B5DA23 /* MessageHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHistory.swift; sourceTree = "<group>"; };
 		97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewViewModel.swift; sourceTree = "<group>"; };
 		97CAF43E26CCFC5200B5DA23 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
+		97CAF44126CDC91300B5DA23 /* DateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHeaderView.swift; sourceTree = "<group>"; };
+		97CAF44326CDC96C00B5DA23 /* FromView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FromView.swift; sourceTree = "<group>"; };
+		97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewData.swift; sourceTree = "<group>"; };
+		97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBodyView.swift; sourceTree = "<group>"; };
+		97CAF44926CDD29700B5DA23 /* MessageViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,7 +194,7 @@
 				976A40BD26CB236A00372210 /* ContentView.swift */,
 				976A40EC26CB325E00372210 /* LoginView.swift */,
 				97CAF43C26CCF73F00B5DA23 /* ChatView */,
-				976A40E826CB250F00372210 /* MessageView.swift */,
+				97CAF44026CDC8D600B5DA23 /* MessageView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -232,6 +242,19 @@
 				97CAF43E26CCFC5200B5DA23 /* Mocks.swift */,
 			);
 			path = Mocks;
+			sourceTree = "<group>";
+		};
+		97CAF44026CDC8D600B5DA23 /* MessageView */ = {
+			isa = PBXGroup;
+			children = (
+				976A40E826CB250F00372210 /* MessageView.swift */,
+				97CAF44926CDD29700B5DA23 /* MessageViews.swift */,
+				97CAF44126CDC91300B5DA23 /* DateHeaderView.swift */,
+				97CAF44326CDC96C00B5DA23 /* FromView.swift */,
+				97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */,
+				97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */,
+			);
+			path = MessageView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,18 +391,23 @@
 				976A40E926CB250F00372210 /* MessageView.swift in Sources */,
 				976A40BE26CB236A00372210 /* ContentView.swift in Sources */,
 				976A40EF26CB33B500372210 /* ChatView.swift in Sources */,
+				97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */,
 				97CAF3F026CB592400B5DA23 /* User.swift in Sources */,
 				97CAF3F226CB595C00B5DA23 /* NavigationLazyView.swift in Sources */,
 				97CAF42E26CBB06800B5DA23 /* View+FlippedUpsideDown.swift in Sources */,
 				97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */,
 				976A40ED26CB325E00372210 /* LoginView.swift in Sources */,
 				97CAF43B26CCF65700B5DA23 /* ChatViewViewModel.swift in Sources */,
+				97CAF44626CDCF7900B5DA23 /* MessageViewData.swift in Sources */,
 				97CAF3F526CB77CC00B5DA23 /* Date+SI.swift in Sources */,
+				97CAF44226CDC91300B5DA23 /* DateHeaderView.swift in Sources */,
 				976A40BC26CB236A00372210 /* SwiftUIChatApp.swift in Sources */,
 				97CAF43726CC79C600B5DA23 /* Color+Extensions.swift in Sources */,
 				97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */,
+				97CAF44426CDC96C00B5DA23 /* FromView.swift in Sources */,
 				97CAF3ED26CB590600B5DA23 /* Message.swift in Sources */,
 				97CAF43926CCF62600B5DA23 /* MessageHistory.swift in Sources */,
+				97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */,
 				97CAF43026CBB1FE00B5DA23 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

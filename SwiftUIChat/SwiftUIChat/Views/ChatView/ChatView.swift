@@ -20,6 +20,7 @@ struct ChatView: View {
                         ForEach((0..<viewModel.viewData.count).reversed(), id: \.self) { i in
                             MessageView(message: viewModel.viewData[i])
                                 .flippedUpsideDown()
+                                .padding(4)
                         }
                     }.background(color: .clear)
                     .background(Color.clear)
