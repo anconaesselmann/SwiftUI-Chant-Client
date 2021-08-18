@@ -22,3 +22,18 @@ extension Color {
 extension CGFloat {
     static let mediumPadding: CGFloat = 16
 }
+
+enum Shadows {
+    case background
+
+    var shadow: ShowdowModifier.Shadow {
+        switch self {
+        case .background:
+            return ShowdowModifier.Shadow(
+                color: Color.backgroundShaddow,
+                radius: 6,
+                x: 0,
+                y: 0)
+        }
+    }
+}

@@ -13,7 +13,7 @@ struct DateHeaderView: View {
             .background(
                 Color(UIColor.darkGray)
                     .cornerRadius(10, corners: [.topLeft, .topRight])
-                    .shadow(color: Color(UIColor(named: "BackgroundShaddow")!), radius: 6, x: 0.0, y: 3.0)
+                    .shadow(.background, y: 3)
             )
     }
 }

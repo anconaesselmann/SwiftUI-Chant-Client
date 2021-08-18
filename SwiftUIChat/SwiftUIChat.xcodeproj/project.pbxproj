@@ -230,8 +230,8 @@
 		97CAF43C26CCF73F00B5DA23 /* ChatView */ = {
 			isa = PBXGroup;
 			children = (
-				976A40EE26CB33B500372210 /* ChatView.swift */,
 				97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */,
+				976A40EE26CB33B500372210 /* ChatView.swift */,
 			);
 			path = ChatView;
 			sourceTree = "<group>";
@@ -247,12 +247,12 @@
 		97CAF44026CDC8D600B5DA23 /* MessageView */ = {
 			isa = PBXGroup;
 			children = (
+				97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */,
 				976A40E826CB250F00372210 /* MessageView.swift */,
 				97CAF44926CDD29700B5DA23 /* MessageViews.swift */,
 				97CAF44126CDC91300B5DA23 /* DateHeaderView.swift */,
 				97CAF44326CDC96C00B5DA23 /* FromView.swift */,
 				97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */,
-				97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */,
 			);
 			path = MessageView;
 			sourceTree = "<group>";

@@ -16,8 +16,6 @@ extension View{
     }
 }
 
-
-
 struct ShowdowModifier: ViewModifier {
 
     struct Shadow {
@@ -27,11 +25,11 @@ struct ShowdowModifier: ViewModifier {
     let shadow: Shadow
 
     init(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) {
-        self.init(Shadow(color: color, radius: radius, x: x, y: y))
+        shadow = Shadow(color: color, radius: radius, x: x, y: y)
     }
 
-    init(_ shadow: Shadow) {
-        self.shadow = shadow
+    init(_ shadow: Shadow, x: CGFloat? = nil, y: CGFloat? = nil) {
+        self.init(color: shadow.color, radius: shadow.radius, x: x ?? shadow.x, y: y ?? shadow.y)
     }
 
     func body(content: Content) -> some View {
@@ -41,18 +39,7 @@ struct ShowdowModifier: ViewModifier {
 }
 
 extension View {
-    func shadow(_ shadow: Shadows) -> some View {
-        self.modifier(ShowdowModifier(shadow.shadow))
-    }
-}
-
-
-enum Shadows {
-    case background
-
-    var shadow: ShowdowModifier.Shadow {
-        switch self {
-        case .background: return ShowdowModifier.Shadow(color: Color.backgroundShaddow, radius: 6, x: 0, y: 0)
-        }
+    func shadow(_ shadow: Shadows, x: CGFloat? = nil, y: CGFloat? = nil) -> some View {
+        self.modifier(ShowdowModifier(shadow.shadow, x: x, y: y))
     }
 }

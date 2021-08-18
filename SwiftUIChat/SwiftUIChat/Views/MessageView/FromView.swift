@@ -12,7 +12,7 @@ struct FromView: View {
             .frame(maxWidth: .infinity)
             .background(
                 Color(UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1))
-                    .shadow(color: Color(UIColor(named: "BackgroundShaddow")!), radius: 6, x: 0.0, y: 3.0)
+                    .shadow(.background, y: 3)
             )
     }
 }
