@@ -4,7 +4,7 @@
 import Foundation
 import Combine
 
-class ChatRoom: ObservableObject, ChatRoomProtocol {
+class ChatRoom: ObservableObject {
 
     enum Status {
         case notConnected
