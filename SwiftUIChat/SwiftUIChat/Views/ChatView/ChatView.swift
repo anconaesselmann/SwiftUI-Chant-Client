@@ -4,16 +4,12 @@
 import SwiftUI
 
 struct ChatView: View {
-
-    @StateObject var chatRoom = ChatRoom()
-
+    @StateObject var viewModel: ChatViewViewModel
     @State var message: String = ""
-
-    let user: User
 
     var body: some View {
         Group {
-            switch chatRoom.status {
+            switch viewModel.status {
             case .notConnected:
                 Text("Not Connected")
             case .error:
@@ -21,17 +17,17 @@ struct ChatView: View {
             case .connected:
                 VStack {
                     List() {
-                        ForEach((0..<chatRoom.history.count).reversed(), id: \.self) { i in
-                            let message = chatRoom.history[i]
-                            MessageView(message: message.viewData(given: user))
+                        ForEach((0..<viewModel.viewData.count).reversed(), id: \.self) { i in
+                            MessageView(message: viewModel.viewData[i])
                                 .flippedUpsideDown()
                         }
-                    }.background(color: .background)
+                    }.background(color: .clear)
+                    .background(Color.clear)
                     .flippedUpsideDown()
                     TextField("Message", text: $message)
                         .padding()
                     Button(action: {
-                        chatRoom.send(message: message)
+                        viewModel.send(message: message)
                         message = ""
                     }, label: {
                         Text("Send")
@@ -40,24 +36,36 @@ struct ChatView: View {
                 }
             }
         }
-        .background(Color.background)
         .navigationBarTitle("Chat", displayMode: .inline)
         .onAppear {
-            chatRoom.joinChat(with: user)
+            viewModel.subscribe()
         }
     }
 }
 
+
+import Combine
+
 struct ChatView_Previews: PreviewProvider {
     static let user = User(name: "Axel")
+    static let vm = ChatViewViewModel(user: user, chatRoom: MockChat(), messageHistory: {
+        let history = MockHistory()
+        history.history = Just(
+            [
+                Message(uuid: UUID(), date: Date(), user: User(name: "Axel"), body: "Hello world"),
+                Message(uuid: UUID(), date: Date(), user: User(name: "Sam"), body: "Mewo")
+            ]
+        ).eraseToAnyPublisher()
+        return history
+    }())
     static var previews: some View {
         Group {
-            ChatView(user: user)
+            ChatView(viewModel: vm)
                 .frame(width: 400, height: 300)
                 .previewLayout(.sizeThatFits)
-            ChatView(user: user)
+            ChatView(viewModel: vm)
                 .preferredColorScheme(.dark)
-                .frame(width: 400, height: 300)
+                .frame(width: 400, height: 400)
                 .previewLayout(.sizeThatFits)
         }
     }

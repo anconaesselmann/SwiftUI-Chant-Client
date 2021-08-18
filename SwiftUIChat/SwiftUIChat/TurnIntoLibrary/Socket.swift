@@ -86,7 +86,6 @@ class Socket: NSObject {
     }
 
     func close() {
-        print("Closing sockets")
         inputStream?.close()
         outputStream?.close()
         inputStream = nil
@@ -94,7 +93,7 @@ class Socket: NSObject {
         statusSubject.send(.disconnected)
     }
 
-    func write(data: Data) {
+    func write(data: Data, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         guard let outputStream = outputStream else {
             eventSubject.send(.error(SocketError.notConnected))
             return
@@ -107,10 +106,11 @@ class Socket: NSObject {
             let bytesWritten = outputStream.write(pointer, maxLength: data.count)
             if bytesWritten > 0 {
                 eventSubject.send(.bytesWritten(bytesWritten))
-            } else if let error = outputStream.streamError {
-                eventSubject.send(.error(error))
+                onSuccess?()
             } else {
-                eventSubject.send(.error(SocketError.couldNotWriteData))
+                let error = outputStream.streamError ?? SocketError.couldNotWriteData
+                eventSubject.send(.error(error))
+                onFailure?(error)
             }
         }
     }
@@ -146,7 +146,6 @@ class Socket: NSObject {
 
 extension Socket: StreamDelegate {
     func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        print("Event: \(eventCode)")
         switch eventCode {
         case .hasBytesAvailable:
             if let inputStream = aStream as? InputStream {
@@ -154,7 +153,6 @@ extension Socket: StreamDelegate {
             }
         case .errorOccurred:
             if let error = aStream.streamError {
-                print("error: \(error)")
                 eventSubject.send(.error(error))
                 statusSubject.send(.notConnectedWithError(error))
             }

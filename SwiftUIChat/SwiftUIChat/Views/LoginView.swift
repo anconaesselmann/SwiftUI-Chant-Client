@@ -15,7 +15,7 @@ struct LoginView: View {
                 destination: NavigationLazyView(
                     Group {
                         if let user = user {
-                            ChatView(user: user)
+                            ChatView(viewModel: ChatViewViewModel(user: user))
                         } else {
                             Text("Not logged in")
                         }

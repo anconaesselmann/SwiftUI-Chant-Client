@@ -24,7 +24,7 @@ struct MessageView: View {
             switch message.type {
             case .sent:
                 HStack {
-                    Color.background.frame(width: 20)
+                    Color.clear.frame(width: 20)
                     VStack(alignment: .trailing, spacing: 0, content: {
                         Text(message.dateString).padding([.top, .leading, .trailing], 16.0)
                         Text(message.body).padding(16)
@@ -41,10 +41,10 @@ struct MessageView: View {
                     })
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     .background(Color(.gray).cornerRadius(20))
-                    Color.background.frame(width: 20)
+                    Color.clear.frame(width: 20)
                 }
             }
-        }.background(Color.background)
+        }.background(Color.clear)
     }
 }
 
@@ -56,16 +56,16 @@ struct MessageView_Previews: PreviewProvider {
         Group {
             VStack {
                 MessageView(message: messageSent)
-                    .frame(width: 300, height: 100)
+                    .frame(width: 300, height: 120)
                 MessageView(message: messageRecieved)
-                    .frame(width: 300, height: 100)
+                    .frame(width: 300, height: 120)
             }
             .previewLayout(.sizeThatFits)
             VStack {
                 MessageView(message: messageSent)
-                    .frame(width: 300, height: 100)
+                    .frame(width: 300, height: 120)
                 MessageView(message: messageRecieved)
-                    .frame(width: 300, height: 100)
+                    .frame(width: 300, height: 120)
             }
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)

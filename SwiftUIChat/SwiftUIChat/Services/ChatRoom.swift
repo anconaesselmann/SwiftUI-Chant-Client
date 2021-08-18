@@ -4,7 +4,15 @@
 import Foundation
 import Combine
 
-class ChatRoom: ObservableObject {
+protocol ChatProtocol {
+    var status: AnyPublisher<ChatRoom.Status, Never> { get }
+    var messageStatus: AnyPublisher<ChatRoom.MessageStatus, Never> { get }
+    func joinChat(with user: User)
+    func send(message: Message)
+    func stopChatSession()
+}
+
+class ChatRoom: ChatProtocol {
 
     enum Status {
         case notConnected
@@ -20,8 +28,22 @@ class ChatRoom: ObservableObject {
         case error(Error)
     }
 
-    @Published var status: ChatRoom.Status = .notConnected
-    @Published var history: [Message] = []
+    enum MessageStatus {
+        case received(Message)
+        case sent(Message)
+    }
+
+    private let messageStatusSubject = PassthroughSubject<MessageStatus, Never>()
+
+    var messageStatus: AnyPublisher<MessageStatus, Never> {
+        messageStatusSubject.eraseToAnyPublisher()
+    }
+
+    private let statusSubject = CurrentValueSubject<Status, Never>(.notConnected)
+
+    var status: AnyPublisher<Status, Never> {
+        statusSubject.eraseToAnyPublisher()
+    }
 
     private var user: User?
 
@@ -33,37 +55,24 @@ class ChatRoom: ObservableObject {
 
     private var subscriptions = Set<AnyCancellable>()
 
-    private var connected = false
-
     init() {
         socket.event
             .subscribe(on: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 self?.eventReceived(event)
-
             }.store(in: &subscriptions)
 
         socket.status
             .subscribe(on: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
-                switch status {
-                case .notInitialized, .disconnected:
-                    self?.status = .notConnected
-                    self?.connected = false
-                case .connected:
-                    self?.status = .connected
-                    self?.connected = true
-                case .notConnectedWithError(let error):
-                    self?.status = .error(.error(error))
-                    self?.connected = false
-                }
+                self?.statusChanged(status)
             }.store(in: &subscriptions)
     }
 
     func joinChat(with user: User) {
-        if self.user == user && connected {
+        if self.user == user {
             return
         }
         self.user = user
@@ -76,23 +85,18 @@ class ChatRoom: ObservableObject {
         self.socket.write(data: data)
     }
 
-    func send(message body: String) {
-        guard let user = user else {
-            return
-        }
-        let uuid = UUID()
-        let date = Date()
-        let message = Message(uuid: uuid, date: date, user: user, body: body)
+    func send(message: Message) {
         guard let jsonString = message.jsonString else {
-            status = .error(.couldNotSendMessage)
+            statusSubject.send(.error(.couldNotSendMessage))
             return
         }
         let messageString = Self.header(for: jsonString) + jsonString
         guard let data = messageString.data(using: .utf8) else {
             return
         }
-        self.socket.write(data: data)
-        history.append(message)
+        self.socket.write(data: data) { [weak self] in
+            self?.messageStatusSubject.send(.sent(message))
+        }
     }
 
     func stopChatSession() {
@@ -109,26 +113,37 @@ class ChatRoom: ObservableObject {
             guard let message = messageFromData(data) else {
                 return
             }
-            history.append(message)
+            messageStatusSubject.send(.received(message))
         case .bytesWritten: ()
         case .error(let error):
-            status = .error(.error(error))
+            statusSubject.send(.error(.error(error)))
+        }
+    }
+
+    private func statusChanged(_ newStatus: Socket.Status) {
+        switch newStatus {
+        case .connected:
+            self.statusSubject.send(.connected)
+        case .notInitialized, .disconnected:
+            self.statusSubject.send(.notConnected)
+        case .notConnectedWithError(let error):
+            self.statusSubject.send(.error(.error(error)))
         }
     }
 
     private func messageFromData(_ data: Data) -> Message? {
         guard let string = String(data: data, encoding: .utf8) else {
-            status = .error(.couldNotReadMessage)
+            statusSubject.send(.error(.couldNotReadMessage))
             return nil
         }
         let characters = Array(string)
         guard !characters.isEmpty else {
-            status = .notConnected
+            statusSubject.send(.notConnected)
             return nil
         }
         let userHeader = String(characters[..<10]).trimmingCharacters(in: .whitespaces)
         guard let userNameLenght = Int(userHeader) else {
-            status = .error(.couldNotReadMessage)
+            statusSubject.send(.error(.couldNotReadMessage))
             return nil
         }
         let messageHeaderStart = userNameLenght + 10

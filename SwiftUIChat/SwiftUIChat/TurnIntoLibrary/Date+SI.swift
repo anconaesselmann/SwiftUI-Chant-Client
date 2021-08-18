@@ -7,17 +7,19 @@ extension Date {
     static var siFormat: String {
         "yyyy-MM-dd HH:mm:ss"
     }
+
+    static var siDateFormatter: DateFormatter = {
+        let formater = DateFormatter()
+        formater.dateFormat = Self.siFormat
+        return formater
+    }()
+
     var siString: String {
-        let date = Date()
-        let format = DateFormatter()
-        format.dateFormat = Self.siFormat
-        return format.string(from: date)
+        Self.siDateFormatter.string(from: self)
     }
 
     init?(siString: String) {
-        let format = DateFormatter()
-        format.dateFormat = Self.siFormat
-        if let date = format.date(from: siString) {
+        if let date = Self.siDateFormatter.date(from: siString) {
             self = date
         } else {
             return nil

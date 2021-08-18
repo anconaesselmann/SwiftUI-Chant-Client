@@ -26,6 +26,9 @@
 		97CAF43226CC4AF000B5DA23 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97CAF43126CC4AF000B5DA23 /* Colors.xcassets */; };
 		97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43326CC65FA00B5DA23 /* Socket.swift */; };
 		97CAF43726CC79C600B5DA23 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43626CC79C600B5DA23 /* Color+Extensions.swift */; };
+		97CAF43926CCF62600B5DA23 /* MessageHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43826CCF62600B5DA23 /* MessageHistory.swift */; };
+		97CAF43B26CCF65700B5DA23 /* ChatViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */; };
+		97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43E26CCFC5200B5DA23 /* Mocks.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,9 @@
 		97CAF43126CC4AF000B5DA23 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		97CAF43326CC65FA00B5DA23 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		97CAF43626CC79C600B5DA23 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
+		97CAF43826CCF62600B5DA23 /* MessageHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHistory.swift; sourceTree = "<group>"; };
+		97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewViewModel.swift; sourceTree = "<group>"; };
+		97CAF43E26CCFC5200B5DA23 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +133,7 @@
 				97CAF3E726CB589500B5DA23 /* Services */,
 				97CAF3EB26CB58FF00B5DA23 /* Models */,
 				976A40BB26CB236A00372210 /* SwiftUIChatApp.swift */,
+				97CAF43D26CCFC4100B5DA23 /* Mocks */,
 				97CAF43126CC4AF000B5DA23 /* Colors.xcassets */,
 				976A40BF26CB236B00372210 /* Assets.xcassets */,
 				976A40C426CB236B00372210 /* Info.plist */,
@@ -166,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				97CAF3E826CB58A300B5DA23 /* ChatRoom.swift */,
+				97CAF43826CCF62600B5DA23 /* MessageHistory.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -175,7 +183,7 @@
 			children = (
 				976A40BD26CB236A00372210 /* ContentView.swift */,
 				976A40EC26CB325E00372210 /* LoginView.swift */,
-				976A40EE26CB33B500372210 /* ChatView.swift */,
+				97CAF43C26CCF73F00B5DA23 /* ChatView */,
 				976A40E826CB250F00372210 /* MessageView.swift */,
 			);
 			path = Views;
@@ -207,6 +215,23 @@
 				97CAF43626CC79C600B5DA23 /* Color+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		97CAF43C26CCF73F00B5DA23 /* ChatView */ = {
+			isa = PBXGroup;
+			children = (
+				976A40EE26CB33B500372210 /* ChatView.swift */,
+				97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */,
+			);
+			path = ChatView;
+			sourceTree = "<group>";
+		};
+		97CAF43D26CCFC4100B5DA23 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				97CAF43E26CCFC5200B5DA23 /* Mocks.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,10 +373,13 @@
 				97CAF42E26CBB06800B5DA23 /* View+FlippedUpsideDown.swift in Sources */,
 				97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */,
 				976A40ED26CB325E00372210 /* LoginView.swift in Sources */,
+				97CAF43B26CCF65700B5DA23 /* ChatViewViewModel.swift in Sources */,
 				97CAF3F526CB77CC00B5DA23 /* Date+SI.swift in Sources */,
 				976A40BC26CB236A00372210 /* SwiftUIChatApp.swift in Sources */,
 				97CAF43726CC79C600B5DA23 /* Color+Extensions.swift in Sources */,
+				97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */,
 				97CAF3ED26CB590600B5DA23 /* Message.swift in Sources */,
+				97CAF43926CCF62600B5DA23 /* MessageHistory.swift in Sources */,
 				97CAF43026CBB1FE00B5DA23 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
