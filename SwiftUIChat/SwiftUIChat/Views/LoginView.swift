@@ -12,6 +12,8 @@ struct LoginView: View {
     var body: some View {
         VStack {
             TextField("Username", text: $username)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
             Button(action: {
                 guard !username.isEmpty else {
                     return
@@ -20,15 +22,19 @@ struct LoginView: View {
                 loginManager.logIn(user)
             }) {
                 Text("Login")
-            }
-        }
+            }.padding([.bottom], .mediumPadding)
+        }.background(Color.background)
+        .frame(width: 250, height: 100, alignment: .center)
+        .cornerRadius(10)
+        .shadow(.background)
+        
     }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView(loginManager: MockLoginManager())
-            .frame(width: 300, height: 300)
+            .frame(width: 300, height: 150)
             .previewLayout(.sizeThatFits)
     }
 }

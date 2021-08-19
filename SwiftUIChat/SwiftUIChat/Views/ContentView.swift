@@ -8,16 +8,20 @@ struct ContentView: View {
     @StateObject var loginManager = LoginManager()
 
     var body: some View {
-        NavigationView(content: {
-            Group {
-                switch loginManager.state {
-                case .loggedIn(let user):
-                    ChatView(viewModel: ChatViewViewModel(user: user, loginManager: loginManager))
-                case .loggedOut:
-                    LoginView(loginManager: loginManager)
+        NavigationView {
+            ZStack {
+                Color.background.edgesIgnoringSafeArea(.all)
+                Group {
+                    switch loginManager.state {
+                    case .loggedIn(let user):
+                        let vm = ChatViewViewModel(user: user, loginManager: loginManager)
+                        ChatView(viewModel: vm)
+                    case .loggedOut:
+                        LoginView(loginManager: loginManager)
+                    }
                 }
-            }
-        }).background(Color.background)
+            }.navigationBarTitle("Login", displayMode: .inline)
+        }
     }
 }
 

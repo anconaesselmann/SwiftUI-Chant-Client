@@ -14,7 +14,7 @@ struct ChatView: View {
         Group {
             switch viewModel.status {
             case .notConnected:
-                Text("Not Connected")
+                ProgressView()
             case .error:
                 Text("Error")
             case .connected:
