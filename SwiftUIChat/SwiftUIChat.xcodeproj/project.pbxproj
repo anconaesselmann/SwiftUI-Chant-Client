@@ -146,14 +146,14 @@
 				97CAF3EA26CB58EF00B5DA23 /* Views */,
 				97CAF3E726CB589500B5DA23 /* Services */,
 				97CAF3EB26CB58FF00B5DA23 /* Models */,
-				976A40BB26CB236A00372210 /* SwiftUIChatApp.swift */,
 				97CAF45026CE035F00B5DA23 /* Managers */,
 				97CAF43D26CCFC4100B5DA23 /* Mocks */,
+				976A40BB26CB236A00372210 /* SwiftUIChatApp.swift */,
+				97CAF42F26CBB1FE00B5DA23 /* Constants.swift */,
 				97CAF43126CC4AF000B5DA23 /* Colors.xcassets */,
 				976A40BF26CB236B00372210 /* Assets.xcassets */,
 				976A40C426CB236B00372210 /* Info.plist */,
 				976A40C126CB236B00372210 /* Preview Content */,
-				97CAF42F26CBB1FE00B5DA23 /* Constants.swift */,
 			);
 			path = SwiftUIChat;
 			sourceTree = "<group>";
