@@ -35,6 +35,7 @@
 		97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */; };
 		97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44926CDD29700B5DA23 /* MessageViews.swift */; };
 		97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */; };
+		97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45126CE036A00B5DA23 /* LoginManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBodyView.swift; sourceTree = "<group>"; };
 		97CAF44926CDD29700B5DA23 /* MessageViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViews.swift; sourceTree = "<group>"; };
 		97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatComposeView.swift; sourceTree = "<group>"; };
+		97CAF45126CE036A00B5DA23 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				97CAF3E726CB589500B5DA23 /* Services */,
 				97CAF3EB26CB58FF00B5DA23 /* Models */,
 				976A40BB26CB236A00372210 /* SwiftUIChatApp.swift */,
+				97CAF45026CE035F00B5DA23 /* Managers */,
 				97CAF43D26CCFC4100B5DA23 /* Mocks */,
 				97CAF43126CC4AF000B5DA23 /* Colors.xcassets */,
 				976A40BF26CB236B00372210 /* Assets.xcassets */,
@@ -185,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				97CAF3E826CB58A300B5DA23 /* ChatRoom.swift */,
-				97CAF43826CCF62600B5DA23 /* MessageHistory.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -266,6 +268,15 @@
 				97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */,
 			);
 			path = ChatComposeView;
+			sourceTree = "<group>";
+		};
+		97CAF45026CE035F00B5DA23 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				97CAF45126CE036A00B5DA23 /* LoginManager.swift */,
+				97CAF43826CCF62600B5DA23 /* MessageHistory.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -415,6 +426,7 @@
 				97CAF44226CDC91300B5DA23 /* DateHeaderView.swift in Sources */,
 				976A40BC26CB236A00372210 /* SwiftUIChatApp.swift in Sources */,
 				97CAF43726CC79C600B5DA23 /* Color+Extensions.swift in Sources */,
+				97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */,
 				97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */,
 				97CAF44426CDC96C00B5DA23 /* FromView.swift in Sources */,
 				97CAF3ED26CB590600B5DA23 /* Message.swift in Sources */,

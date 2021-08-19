@@ -19,3 +19,14 @@ class MockHistory: HistoryProtocol {
 
     func add(message: Message) { }
 }
+
+class MockLoginManager: LoginManagerProtocol {
+    func logIn(_ user: User) {
+
+    }
+
+    func logout() {
+
+    }
+
+}

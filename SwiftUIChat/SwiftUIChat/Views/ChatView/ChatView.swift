@@ -3,6 +3,10 @@
 
 import SwiftUI
 
+private extension CGFloat {
+    static let listRowOffset: CGFloat = 0
+}
+
 struct ChatView: View {
     @StateObject var viewModel: ChatViewViewModel
 
@@ -14,16 +18,17 @@ struct ChatView: View {
             case .error:
                 Text("Error")
             case .connected:
-                VStack {
+                VStack(spacing: 0) {
                     List() {
                         ForEach((0..<viewModel.viewData.count).reversed(), id: \.self) { i in
                             MessageView(message: viewModel.viewData[i])
                                 .flippedUpsideDown()
-                                .padding(.extraSmallPadding)
+                                .listRowInsets(.init(top: .listRowOffset, leading: .listRowOffset, bottom: .listRowOffset, trailing: .listRowOffset))
                         }
                     }
-                    .background(color: .clear)
-                    .background(Color.clear)
+                    .background(color: .background)
+                    .listStyle(PlainListStyle())
+                    .background(Color.background)
                     .flippedUpsideDown()
                     ChatComposeView() {
                         viewModel.send(message: $0)
@@ -38,16 +43,21 @@ struct ChatView: View {
             }
         }
         .navigationBarTitle("Chat", displayMode: .inline)
+        .toolbar {
+            Button("Logout") {
+                viewModel.logout()
+            }
+        }
         .onAppear {
             viewModel.subscribe()
         }
     }
 }
 
-
 import Combine
 
 struct ChatView_Previews: PreviewProvider {
+    static let loginManager = LoginManager()
     static let user = User(name: "Axel")
     static let vm = ChatViewViewModel(user: user, chatRoom: MockChat(), messageHistory: {
         let history = MockHistory()
@@ -58,7 +68,7 @@ struct ChatView_Previews: PreviewProvider {
             ]
         ).eraseToAnyPublisher()
         return history
-    }())
+    }(), loginManager: loginManager)
     static var previews: some View {
         Group {
             ChatView(viewModel: vm)

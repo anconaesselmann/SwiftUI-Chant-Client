@@ -14,7 +14,8 @@ struct MessageView: View {
             case .recieved: RecievedMessageView(message: message)
             }
         }
-        .background(Color.clear)
+        .padding(.smallPadding)
+        .background(Color.background)
     }
 }
 

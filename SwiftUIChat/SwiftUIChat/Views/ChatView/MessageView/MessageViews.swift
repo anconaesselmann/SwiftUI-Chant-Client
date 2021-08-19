@@ -14,7 +14,7 @@ struct SentMessageView: View {
     let message: MessageViewData
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             VStack(alignment: .trailing, spacing: 0) {
                 DateHeaderView(dateString: message.dateString)
                 MessageBodyView(messageBody: message.body)
@@ -34,7 +34,7 @@ struct RecievedMessageView: View {
     let message: MessageViewData
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 DateHeaderView(dateString: message.dateString)
                 FromView(fromString: "From: \(message.userName)")

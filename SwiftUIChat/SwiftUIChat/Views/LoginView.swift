@@ -7,32 +7,19 @@ struct LoginView: View {
     @State var username: String = ""
     @State var selection: Int?
 
-    @State var user: User?
+    let loginManager: LoginManagerProtocol
+
     var body: some View {
         VStack {
             TextField("Username", text: $username)
-            NavigationLink(
-                destination: NavigationLazyView(
-                    Group {
-                        if let user = user {
-                            ChatView(viewModel: ChatViewViewModel(user: user))
-                        } else {
-                            Text("Not logged in")
-                        }
-                    }
-                ),
-                tag: 1,
-                selection: $selection
-            ) {
-                Button(action: {
-                    guard !username.isEmpty else {
-                        return
-                    }
-                    self.user = User(name: username)
-                    selection = 1
-                }) {
-                    Text("Login")
+            Button(action: {
+                guard !username.isEmpty else {
+                    return
                 }
+                let user = User(name: username)
+                loginManager.logIn(user)
+            }) {
+                Text("Login")
             }
         }
     }
@@ -40,6 +27,8 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        LoginView(loginManager: MockLoginManager())
+            .frame(width: 300, height: 300)
+            .previewLayout(.sizeThatFits)
     }
 }

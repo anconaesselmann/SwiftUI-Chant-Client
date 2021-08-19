@@ -8,6 +8,8 @@ class ChatViewViewModel: ObservableObject {
     @Published var viewData: [MessageViewData] = []
     @Published var status: ChatRoom.Status = .notConnected
 
+    let loginManager: LoginManager
+
     private let user: User
     private let chatRoom: ChatProtocol
     private let messageHistory: HistoryProtocol
@@ -16,10 +18,11 @@ class ChatViewViewModel: ObservableObject {
     
     private var subscriptions = Set<AnyCancellable>()
 
-    init(user: User, chatRoom: ChatProtocol = ChatRoom(), messageHistory: HistoryProtocol = MessageHistory()) {
+    init(user: User, chatRoom: ChatProtocol = ChatRoom(), messageHistory: HistoryProtocol = MessageHistory(), loginManager: LoginManager) {
         self.user = user
         self.chatRoom = chatRoom
         self.messageHistory = messageHistory
+        self.loginManager = loginManager
     }
 
     func subscribe() {
@@ -52,6 +55,10 @@ class ChatViewViewModel: ObservableObject {
         let date = Date()
         let message = Message(uuid: uuid, date: date, user: user, body: body)
         chatRoom.send(message: message)
+    }
+
+    func logout() {
+        loginManager.logout()
     }
 
     deinit {
