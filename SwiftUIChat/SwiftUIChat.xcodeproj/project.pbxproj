@@ -34,6 +34,7 @@
 		97CAF44626CDCF7900B5DA23 /* MessageViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */; };
 		97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */; };
 		97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44926CDD29700B5DA23 /* MessageViews.swift */; };
+		97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		97CAF44526CDCF7900B5DA23 /* MessageViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewData.swift; sourceTree = "<group>"; };
 		97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBodyView.swift; sourceTree = "<group>"; };
 		97CAF44926CDD29700B5DA23 /* MessageViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViews.swift; sourceTree = "<group>"; };
+		97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatComposeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,7 +196,6 @@
 				976A40BD26CB236A00372210 /* ContentView.swift */,
 				976A40EC26CB325E00372210 /* LoginView.swift */,
 				97CAF43C26CCF73F00B5DA23 /* ChatView */,
-				97CAF44026CDC8D600B5DA23 /* MessageView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -232,6 +233,8 @@
 			children = (
 				97CAF43A26CCF65700B5DA23 /* ChatViewViewModel.swift */,
 				976A40EE26CB33B500372210 /* ChatView.swift */,
+				97CAF44026CDC8D600B5DA23 /* MessageView */,
+				97CAF44D26CDD73B00B5DA23 /* ChatComposeView */,
 			);
 			path = ChatView;
 			sourceTree = "<group>";
@@ -255,6 +258,14 @@
 				97CAF44726CDD11600B5DA23 /* MessageBodyView.swift */,
 			);
 			path = MessageView;
+			sourceTree = "<group>";
+		};
+		97CAF44D26CDD73B00B5DA23 /* ChatComposeView */ = {
+			isa = PBXGroup;
+			children = (
+				97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */,
+			);
+			path = ChatComposeView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -395,6 +406,7 @@
 				97CAF3F026CB592400B5DA23 /* User.swift in Sources */,
 				97CAF3F226CB595C00B5DA23 /* NavigationLazyView.swift in Sources */,
 				97CAF42E26CBB06800B5DA23 /* View+FlippedUpsideDown.swift in Sources */,
+				97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */,
 				97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */,
 				976A40ED26CB325E00372210 /* LoginView.swift in Sources */,
 				97CAF43B26CCF65700B5DA23 /* ChatViewViewModel.swift in Sources */,

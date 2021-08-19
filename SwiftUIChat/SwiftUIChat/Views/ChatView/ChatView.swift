@@ -5,7 +5,6 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject var viewModel: ChatViewViewModel
-    @State var message: String = ""
 
     var body: some View {
         Group {
@@ -20,20 +19,21 @@ struct ChatView: View {
                         ForEach((0..<viewModel.viewData.count).reversed(), id: \.self) { i in
                             MessageView(message: viewModel.viewData[i])
                                 .flippedUpsideDown()
-                                .padding(4)
+                                .padding(.extraSmallPadding)
                         }
-                    }.background(color: .clear)
+                    }
+                    .background(color: .clear)
                     .background(Color.clear)
                     .flippedUpsideDown()
-                    TextField("Message", text: $message)
-                        .padding()
-                    Button(action: {
-                        viewModel.send(message: message)
-                        message = ""
-                    }, label: {
-                        Text("Send")
-                    })
-                    .padding()
+                    ChatComposeView() {
+                        viewModel.send(message: $0)
+                    }
+                    .padding([.top, .bottom], .mediumPadding)
+                    .background(
+                        Color.background
+                            .ignoresSafeArea(edges: .bottom)
+                            .shadow(.background)
+                    )
                 }
             }
         }
