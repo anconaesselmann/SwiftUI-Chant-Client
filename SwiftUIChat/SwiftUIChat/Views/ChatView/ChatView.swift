@@ -77,7 +77,7 @@ struct ChatView_Previews: PreviewProvider {
                 .previewLayout(.sizeThatFits)
             ChatView(viewModel: vm)
                 .preferredColorScheme(.dark)
-                .frame(width: 400, height: 400)
+                .frame(width: 400, height: 300)
                 .previewLayout(.sizeThatFits)
         }
     }

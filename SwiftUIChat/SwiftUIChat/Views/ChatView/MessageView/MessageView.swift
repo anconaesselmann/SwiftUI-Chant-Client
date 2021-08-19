@@ -26,19 +26,17 @@ struct MessageView_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            VStack {
+            List {
                 MessageView(message: messageSent)
-                    .frame(width: 300, height: 104)
                 MessageView(message: messageRecieved)
-                    .frame(width: 300, height: 120)
             }
+            .frame(width: 300, height: 230)
             .previewLayout(.sizeThatFits)
-            VStack {
+            List {
                 MessageView(message: messageSent)
-                    .frame(width: 300, height: 120)
                 MessageView(message: messageRecieved)
-                    .frame(width: 300, height: 120)
             }
+            .frame(width: 300, height: 230)
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)
         }
