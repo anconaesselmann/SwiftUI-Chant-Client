@@ -21,7 +21,7 @@
 		97CAF3F026CB592400B5DA23 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF3EF26CB592400B5DA23 /* User.swift */; };
 		97CAF3F226CB595C00B5DA23 /* NavigationLazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF3F126CB595C00B5DA23 /* NavigationLazyView.swift */; };
 		97CAF3F526CB77CC00B5DA23 /* Date+SI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF3F426CB77CC00B5DA23 /* Date+SI.swift */; };
-		97CAF42E26CBB06800B5DA23 /* View+FlippedUpsideDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF42D26CBB06800B5DA23 /* View+FlippedUpsideDown.swift */; };
+		97CAF42E26CBB06800B5DA23 /* FlippedUpsideDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF42D26CBB06800B5DA23 /* FlippedUpsideDown.swift */; };
 		97CAF43026CBB1FE00B5DA23 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF42F26CBB1FE00B5DA23 /* Constants.swift */; };
 		97CAF43226CC4AF000B5DA23 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97CAF43126CC4AF000B5DA23 /* Colors.xcassets */; };
 		97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF43326CC65FA00B5DA23 /* Socket.swift */; };
@@ -36,6 +36,7 @@
 		97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44926CDD29700B5DA23 /* MessageViews.swift */; };
 		97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */; };
 		97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45126CE036A00B5DA23 /* LoginManager.swift */; };
+		97CAF45526CE2E0800B5DA23 /* ShowdowModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +77,7 @@
 		97CAF3EF26CB592400B5DA23 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		97CAF3F126CB595C00B5DA23 /* NavigationLazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLazyView.swift; sourceTree = "<group>"; };
 		97CAF3F426CB77CC00B5DA23 /* Date+SI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+SI.swift"; sourceTree = "<group>"; };
-		97CAF42D26CBB06800B5DA23 /* View+FlippedUpsideDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FlippedUpsideDown.swift"; sourceTree = "<group>"; };
+		97CAF42D26CBB06800B5DA23 /* FlippedUpsideDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlippedUpsideDown.swift; sourceTree = "<group>"; };
 		97CAF42F26CBB1FE00B5DA23 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		97CAF43126CC4AF000B5DA23 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		97CAF43326CC65FA00B5DA23 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		97CAF44926CDD29700B5DA23 /* MessageViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViews.swift; sourceTree = "<group>"; };
 		97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatComposeView.swift; sourceTree = "<group>"; };
 		97CAF45126CE036A00B5DA23 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
+		97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowdowModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,8 +216,8 @@
 		97CAF3F326CB597F00B5DA23 /* TurnIntoLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				97CAF45326CE2DF600B5DA23 /* ViewModifiers */,
 				97CAF3F126CB595C00B5DA23 /* NavigationLazyView.swift */,
-				97CAF42D26CBB06800B5DA23 /* View+FlippedUpsideDown.swift */,
 				97CAF3F426CB77CC00B5DA23 /* Date+SI.swift */,
 				97CAF43326CC65FA00B5DA23 /* Socket.swift */,
 			);
@@ -277,6 +279,15 @@
 				97CAF43826CCF62600B5DA23 /* MessageHistory.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		97CAF45326CE2DF600B5DA23 /* ViewModifiers */ = {
+			isa = PBXGroup;
+			children = (
+				97CAF42D26CBB06800B5DA23 /* FlippedUpsideDown.swift */,
+				97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */,
+			);
+			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -416,7 +427,7 @@
 				97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */,
 				97CAF3F026CB592400B5DA23 /* User.swift in Sources */,
 				97CAF3F226CB595C00B5DA23 /* NavigationLazyView.swift in Sources */,
-				97CAF42E26CBB06800B5DA23 /* View+FlippedUpsideDown.swift in Sources */,
+				97CAF42E26CBB06800B5DA23 /* FlippedUpsideDown.swift in Sources */,
 				97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */,
 				97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */,
 				976A40ED26CB325E00372210 /* LoginView.swift in Sources */,
@@ -427,6 +438,7 @@
 				976A40BC26CB236A00372210 /* SwiftUIChatApp.swift in Sources */,
 				97CAF43726CC79C600B5DA23 /* Color+Extensions.swift in Sources */,
 				97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */,
+				97CAF45526CE2E0800B5DA23 /* ShowdowModifier.swift in Sources */,
 				97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */,
 				97CAF44426CDC96C00B5DA23 /* FromView.swift in Sources */,
 				97CAF3ED26CB590600B5DA23 /* Message.swift in Sources */,
