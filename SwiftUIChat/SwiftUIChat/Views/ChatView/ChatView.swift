@@ -15,8 +15,9 @@ struct ChatView: View {
             switch viewModel.status {
             case .notConnected:
                 ProgressView()
-            case .error:
-                Text("Error")
+            case .error(let error):
+                Text("Error: \(error.localizedDescription)")
+                    .padding(.mediumPadding)
             case .connected:
                 VStack(spacing: 0) {
                     List() {
