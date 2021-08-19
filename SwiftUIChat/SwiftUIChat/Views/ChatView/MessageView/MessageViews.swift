@@ -4,7 +4,7 @@
 import SwiftUI
 
 fileprivate extension CGFloat {
-    static let messageOffset: CGFloat = 20
+    static let messageOffset: CGFloat = 30
     static let smallCornerRadius: CGFloat = 16
     static let largeCornerRadius: CGFloat = 20
 }
