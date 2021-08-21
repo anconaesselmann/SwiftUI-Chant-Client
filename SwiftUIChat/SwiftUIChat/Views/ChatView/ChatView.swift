@@ -21,11 +21,23 @@ struct ChatView: View {
             case .connected:
                 VStack(spacing: 0) {
                     List() {
-                        ForEach((0..<viewModel.viewData.count).reversed(), id: \.self) { i in
-                            MessageView(message: viewModel.viewData[i])
-                                .flippedUpsideDown()
-                                .listRowInsets(.init(top: .listRowOffset, leading: .listRowOffset, bottom: .listRowOffset, trailing: .listRowOffset))
+                        Group {
+                            if viewModel.chatPartnerIsTyping {
+                                Section() {
+                                    MessageView(message: MessageViewData(dateString: nil, type: .recieved, body: "..."))
+                                        .flippedUpsideDown()
+                                        .listRowInsets(.init(top: .listRowOffset, leading: .listRowOffset, bottom: .listRowOffset, trailing: .listRowOffset))
+                                }
+                            }
                         }
+                        Section() {
+                            ForEach((0..<viewModel.viewData.count).reversed(), id: \.self) { i in
+                                MessageView(message: viewModel.viewData[i])
+                                    .flippedUpsideDown()
+                                    .listRowInsets(.init(top: .listRowOffset, leading: .listRowOffset, bottom: .listRowOffset, trailing: .listRowOffset))
+                            }
+                        }
+
                     }
                     .background(color: .background)
                     .listStyle(PlainListStyle())

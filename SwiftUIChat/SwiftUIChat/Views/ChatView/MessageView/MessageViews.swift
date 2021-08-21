@@ -16,7 +16,11 @@ struct SentMessageView: View {
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .trailing, spacing: 0) {
-                DateHeaderView(dateString: message.dateString)
+                Group {
+                    if let dateString = message.dateString {
+                        DateHeaderView(dateString: dateString)
+                    }
+                }
                 MessageBodyView(messageBody: message.body)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
@@ -36,7 +40,11 @@ struct RecievedMessageView: View {
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
-                DateHeaderView(dateString: message.dateString)
+                Group {
+                    if let dateString = message.dateString {
+                        DateHeaderView(dateString: dateString)
+                    }
+                }
 //                FromView(fromString: "From: \(message.userName)")
                 MessageBodyView(messageBody: message.body)
             }

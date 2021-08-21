@@ -16,6 +16,7 @@ struct ChatComposeView: View {
             Button(action: {
                 onSend(message)
                 message = ""
+                hideKeyboard() 
             }, label: {
                 Text("Send")
             })

@@ -4,7 +4,7 @@
 import Foundation
 
 struct MessageViewData {
-    let dateString: String
+    let dateString: String?
     let type: MessageType
     let body: String
 

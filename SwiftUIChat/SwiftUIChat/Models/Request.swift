@@ -16,10 +16,10 @@ extension Request {
     }
     var encoded: Data? {
         guard
-            let type = padd(String(self.requestType.rawValue), with: " ", lentgh: 2),
+            let type = String(self.requestType.rawValue).padded(with: " ", lentgh: 2),
             let data = try? Self.encoder.encode(self),
             let serialized = String(data: data, encoding: .utf8),
-            let header = padd(String(serialized.count), with: " ", lentgh: 10),
+            let header = String(serialized.count).padded(with: " ", lentgh: 10),
             let messageData = (type + header + serialized).data(using: .utf8)
         else {
             return nil

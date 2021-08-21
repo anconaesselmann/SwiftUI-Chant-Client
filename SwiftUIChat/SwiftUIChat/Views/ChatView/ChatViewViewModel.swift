@@ -7,6 +7,7 @@ import Combine
 class ChatViewViewModel: ObservableObject {
     @Published var viewData: [MessageViewData] = []
     @Published var status: SocketNetworking.Status = .notConnected
+    @Published var chatPartnerIsTyping = false
 
     let loginManager: LoginManager
 
@@ -46,8 +47,6 @@ class ChatViewViewModel: ObservableObject {
                 self?.messageHistory.add(message: message)
             }
         }.store(in: &subscriptions)
-
-//        networking.joinChat(with: user)
     }
 
     func send(message body: String) {
