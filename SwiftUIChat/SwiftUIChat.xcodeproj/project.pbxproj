@@ -38,9 +38,11 @@
 		97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45126CE036A00B5DA23 /* LoginManager.swift */; };
 		97CAF45526CE2E0800B5DA23 /* ShowdowModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */; };
 		97CAF45726CFAA1D00B5DA23 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45626CFAA1D00B5DA23 /* SignupView.swift */; };
-		97CAF45926CFAC7300B5DA23 /* SignupRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45826CFAC7300B5DA23 /* SignupRequest.swift */; };
 		97CAF45B26CFAF9400B5DA23 /* EmailLoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45A26CFAF9400B5DA23 /* EmailLoginRequest.swift */; };
 		97CAF45D26D06B6500B5DA23 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45C26D06B6500B5DA23 /* Packet.swift */; };
+		97CAF45F26D0D05100B5DA23 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45E26D0D05100B5DA23 /* ServerResponse.swift */; };
+		97CAF46126D0D06500B5DA23 /* ClientRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46026D0D06500B5DA23 /* ClientRequests.swift */; };
+		97CAF46326D0D27C00B5DA23 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46226D0D27C00B5DA23 /* Request.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,9 +100,11 @@
 		97CAF45126CE036A00B5DA23 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowdowModifier.swift; sourceTree = "<group>"; };
 		97CAF45626CFAA1D00B5DA23 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
-		97CAF45826CFAC7300B5DA23 /* SignupRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRequest.swift; sourceTree = "<group>"; };
 		97CAF45A26CFAF9400B5DA23 /* EmailLoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailLoginRequest.swift; sourceTree = "<group>"; };
 		97CAF45C26D06B6500B5DA23 /* Packet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
+		97CAF45E26D0D05100B5DA23 /* ServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
+		97CAF46026D0D06500B5DA23 /* ClientRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientRequests.swift; sourceTree = "<group>"; };
+		97CAF46226D0D27C00B5DA23 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,9 +222,11 @@
 			children = (
 				97CAF3EC26CB590600B5DA23 /* Message.swift */,
 				97CAF3EF26CB592400B5DA23 /* User.swift */,
-				97CAF45826CFAC7300B5DA23 /* SignupRequest.swift */,
 				97CAF45A26CFAF9400B5DA23 /* EmailLoginRequest.swift */,
 				97CAF45C26D06B6500B5DA23 /* Packet.swift */,
+				97CAF46226D0D27C00B5DA23 /* Request.swift */,
+				97CAF46026D0D06500B5DA23 /* ClientRequests.swift */,
+				97CAF45E26D0D05100B5DA23 /* ServerResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -438,6 +444,7 @@
 				97CAF45D26D06B6500B5DA23 /* Packet.swift in Sources */,
 				976A40EF26CB33B500372210 /* ChatView.swift in Sources */,
 				97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */,
+				97CAF46326D0D27C00B5DA23 /* Request.swift in Sources */,
 				97CAF3F026CB592400B5DA23 /* User.swift in Sources */,
 				97CAF3F226CB595C00B5DA23 /* NavigationLazyView.swift in Sources */,
 				97CAF42E26CBB06800B5DA23 /* FlippedUpsideDown.swift in Sources */,
@@ -451,14 +458,15 @@
 				97CAF44226CDC91300B5DA23 /* DateHeaderView.swift in Sources */,
 				976A40BC26CB236A00372210 /* SwiftUIChatApp.swift in Sources */,
 				97CAF43726CC79C600B5DA23 /* Color+Extensions.swift in Sources */,
+				97CAF45F26D0D05100B5DA23 /* ServerResponse.swift in Sources */,
 				97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */,
 				97CAF45526CE2E0800B5DA23 /* ShowdowModifier.swift in Sources */,
 				97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */,
 				97CAF44426CDC96C00B5DA23 /* FromView.swift in Sources */,
-				97CAF45926CFAC7300B5DA23 /* SignupRequest.swift in Sources */,
 				97CAF3ED26CB590600B5DA23 /* Message.swift in Sources */,
 				97CAF43926CCF62600B5DA23 /* MessageHistory.swift in Sources */,
 				97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */,
+				97CAF46126D0D06500B5DA23 /* ClientRequests.swift in Sources */,
 				97CAF45726CFAA1D00B5DA23 /* SignupView.swift in Sources */,
 				97CAF43026CBB1FE00B5DA23 /* Constants.swift in Sources */,
 			);

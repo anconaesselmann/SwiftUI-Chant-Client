@@ -145,7 +145,6 @@ class SocketNetworking: SocketNetworkingProtocol {
             do {
                 let packet = try Packet(data)
                 switch packet.type {
-                case .newUser, .emailLogin, .tokenLogin, .chatClient, .loggedOut: ()
                 case .loggedIn:
                     if let token = token(from: packet) {
                         print(token)
@@ -154,7 +153,7 @@ class SocketNetworking: SocketNetworkingProtocol {
                     } else {
                         print("Invalid token")
                     }
-                case .chatServer:
+                case .chatMessage:
                     if let message = message(from: packet) {
                        messageStatusSubject.send(.received(message))
                     } else {

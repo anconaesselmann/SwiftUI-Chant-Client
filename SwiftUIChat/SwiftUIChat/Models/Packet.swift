@@ -16,11 +16,11 @@ struct Packet {
         case noHeader
         case invalidPayload
     }
-    let type: RequestType
+    let type: ServerResponseType
     let data: Data
     let headers: [Headers]
 
-    init(type: RequestType, data: Data, headers: [Headers] = []) {
+    init(type: ServerResponseType, data: Data, headers: [Headers] = []) {
         self.type = type
         self.data = data
         self.headers = headers
@@ -40,7 +40,7 @@ struct Packet {
         let typeHeader = String(characters[..<2]).trimmingCharacters(in: .whitespaces)
         guard
             let typeInt = Int(typeHeader),
-            let type = RequestType(rawValue: typeInt)
+            let type = ServerResponseType(rawValue: typeInt)
         else {
             throw PacketError.invalidTypeHeader
         }

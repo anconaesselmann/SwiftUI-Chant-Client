@@ -8,7 +8,8 @@ import uuid
 from datetime import datetime
 
 from Auth import Authenticaton
-from Messages import *
+from ClientRequests import *
+from ServerResponses import *
 from MessageSerialization import serialize
 # from MessageSerialization import read_from_stream
 from MessageSerialization import HEADER_TYPE_LENGTH
@@ -68,7 +69,7 @@ def read(client_socket):
         print(type_header)
         type_int = int(type_header.decode('utf-8').strip())
         print(type_int)
-        message_type = MessageType(type_int)
+        message_type = ClientRequestType(type_int)
         print(message_type)
         message_header = client_socket.recv(MEADER_MESSAGE_LENGTH)
         message_length = int(message_header.decode('utf-8').strip())
@@ -93,7 +94,7 @@ def connect(client_socket, client_address):
             return False
 
         user = None
-        if message.message_type == MessageType.NEW_USER:
+        if message.message_type == ClientRequestType.SIGNUP:
             request = NewUserRequest.fromJSON(json_data = message.data)
             user_name = request.name
             token = auth.create_user(email = request.email, name = request.name, password = request.password)
@@ -101,7 +102,7 @@ def connect(client_socket, client_address):
                 print("User already exists")
                 return False
             user = User(name = user_name, token = token)
-        elif message.message_type == MessageType.EMAIL_LOGIN:
+        elif message.message_type == ClientRequestType.EMAIL_LOGIN:
             request = EmailLoginRequest.fromJSON(json_data = message.data)
             token = auth.log_in(email = request.email, password = request.password)
             if token is None:
@@ -109,7 +110,7 @@ def connect(client_socket, client_address):
                 return False
             user_name = auth.user_name_for(token.user_id)
             user = User(name = user_name, token = token)
-        elif message.message_type == MessageType.TOKEN_LOGIN:
+        elif message.message_type == ClientRequestType.TOKEN_LOGIN:
             request = TokenLoginRequest.fromJSON(json_data = message.data)
             token = auth.validate(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
             if token is None:
@@ -138,8 +139,8 @@ def receive_message(client_socket):
         print("could not read message")
         return False
     
-    elif message.message_type == MessageType.CHAT_CLIENT:
-        print("CHAT_CLIENT")
+    elif message.message_type == ClientRequestType.CHAT_MESSAGE:
+        print("CHAT_MESSAGE")
         request = ChatMessageRequest.fromJSON(json_data = message.data)
         print("request: ", request.sender_id, request.chat_id, request.message_id, request.token, request.body)
         token = auth.validate(user_id = uuid.UUID(request.sender_id), token = uuid.UUID(request.token))
@@ -154,7 +155,7 @@ def receive_message(client_socket):
         server_message = ChatMessageResponse(chat_id = uuid.UUID(request.chat_id), message_id = uuid.UUID(request.message_id), sender_name = sender_name, body = request.body, date = datetime.now().__str__())
         print("server message: ", server_message)
         return server_message
-    elif message.message_type == MessageType.LOGGED_OUT:
+    elif message.message_type == ClientRequestType.LOGGED_OUT:
         print("LOGGED_OUT")
         request = LogoutRequest.fromJSON(json_data = message.data)
         token = auth.validate(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))

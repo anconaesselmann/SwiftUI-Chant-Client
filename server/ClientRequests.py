@@ -1,17 +1,18 @@
 from enum import Enum
 import json
 
-class MessageType(Enum):
-	NEW_USER = 0
+class ClientRequestType(Enum):
+	SIGNUP = 0
 	EMAIL_LOGIN = 1
 	TOKEN_LOGIN = 2
-	LOGGED_IN = 3
-	CHAT_CLIENT = 4
-	CHAT_SERVER = 5
-	LOGGED_OUT = 6
+	CHAT_MESSAGE = 3
+	LOGGED_OUT = 4
+	IS_TYPING = 5
+	STOPPED_TYPING = 6
+	MESSAGE_READ = 7
 
 class NewUserRequest:
-	MESSAGE_TYPE = MessageType.NEW_USER
+	MESSAGE_TYPE = ClientRequestType.SIGNUP
 	def __init__(self, email, name, password):
 		self.email = email
 		self.name = name
@@ -21,13 +22,12 @@ class NewUserRequest:
 		dictionary = json.loads(json_data.decode('utf-8'))
 		return NewUserRequest(**dictionary)
 		
-
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
 
 
 class EmailLoginRequest:
-	MESSAGE_TYPE = MessageType.EMAIL_LOGIN
+	MESSAGE_TYPE = ClientRequestType.EMAIL_LOGIN
 	def __init__(self, email, password):
 		self.email = email
 		self.password = password
@@ -40,7 +40,7 @@ class EmailLoginRequest:
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
 
 class TokenLoginRequest:
-	MESSAGE_TYPE = MessageType.TOKEN_LOGIN
+	MESSAGE_TYPE = ClientRequestType.TOKEN_LOGIN
 	def __init__(self, user_id, token):
 		self.user_id = user_id
 		self.token = token
@@ -53,7 +53,7 @@ class TokenLoginRequest:
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
 
 class LogoutRequest:
-	MESSAGE_TYPE = MessageType.LOGGED_OUT
+	MESSAGE_TYPE = ClientRequestType.LOGGED_OUT
 	def __init__(self, user_id, token):
 		self.user_id = user_id
 		self.token = token
@@ -65,23 +65,8 @@ class LogoutRequest:
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
 
-class LoggedInResponse:
-	MESSAGE_TYPE = MessageType.LOGGED_IN
-	def __init__(self, user_id, token, expires):
-		self.user_id = user_id
-		self.token = token
-		self.expires = expires
-
-	def toJSON(self):
-		dictionary = {
-			"user_id": self.user_id.__str__(),
-			"token": self.token.__str__(),
-			"expires": self.expires.__str__()
-		}
-		return json.dumps(dictionary, default=lambda o: o.__dict__, sort_keys=True, indent=None)
-
 class ChatMessageRequest:
-	MESSAGE_TYPE = MessageType.CHAT_CLIENT
+	MESSAGE_TYPE = ClientRequestType.CHAT_MESSAGE
 	def __init__(self, sender_id, chat_id, message_id, token, body):
 		self.sender_id = sender_id
 		self.chat_id = chat_id
@@ -95,22 +80,3 @@ class ChatMessageRequest:
 
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
-
-class ChatMessageResponse:
-	MESSAGE_TYPE = MessageType.CHAT_SERVER
-	def __init__(self, chat_id, message_id, sender_name, body, date):
-		self.chat_id = chat_id
-		self.message_id = message_id
-		self.sender_name = sender_name
-		self.body = body
-		self.date = date
-
-	def toJSON(self):
-		dictionary = {
-			"chat_id": self.chat_id.__str__(),
-			"message_id": self.message_id.__str__(),
-			"sender_name": self.sender_name,
-			"body": self.body,
-			"date": self.date.__str__()
-		}
-		return json.dumps(dictionary, sort_keys=True, indent=None)
