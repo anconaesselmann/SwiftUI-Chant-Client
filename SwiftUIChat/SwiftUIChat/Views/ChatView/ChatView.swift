@@ -43,7 +43,7 @@ struct ChatView: View {
                     .listStyle(PlainListStyle())
                     .background(Color.background)
                     .flippedUpsideDown()
-                    ChatComposeView() {
+                    ChatComposeView(message: $viewModel.message) {
                         viewModel.send(message: $0)
                     }
                     .padding([.top, .bottom], .mediumPadding)

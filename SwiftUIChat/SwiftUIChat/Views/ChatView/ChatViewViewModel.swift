@@ -8,6 +8,13 @@ class ChatViewViewModel: ObservableObject {
     @Published var viewData: [MessageViewData] = []
     @Published var status: SocketNetworking.Status = .notConnected
     @Published var chatPartnerIsTyping = false
+    @Published var userIsTyping = false {
+        didSet {
+            networking.updateIsTyping(userIsTyping)
+            print(userIsTyping)
+        }
+    }
+    @Published var message: String = ""
 
     let loginManager: LoginManager
 
@@ -18,10 +25,25 @@ class ChatViewViewModel: ObservableObject {
     
     private var subscriptions = Set<AnyCancellable>()
 
+    var timer: Timer?
+
     init(networking: SocketNetworkingProtocol = SocketNetworking(), messageHistory: HistoryProtocol = MessageHistory(), loginManager: LoginManager) {
         self.networking = networking
         self.messageHistory = messageHistory
         self.loginManager = loginManager
+
+        $message.sink { [weak self] message in
+            guard !message.isEmpty else {
+                return
+            }
+            if let userIsTyping = self?.userIsTyping, userIsTyping == false {
+                self?.userIsTyping = true
+            }
+            self?.timer?.invalidate()
+            self?.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+                self?.userIsTyping = false
+            }
+        }.store(in: &subscriptions)
     }
 
     func subscribe() {
@@ -43,8 +65,13 @@ class ChatViewViewModel: ObservableObject {
 
         networking.messageStatus.sink { [weak self] status in
             switch status {
-            case .received(let message), .sent(let message):
+            case .received(let message):
+                self?.chatPartnerIsTyping = false
                 self?.messageHistory.add(message: message)
+            case .sent(let message):
+                self?.messageHistory.add(message: message)
+            case .isTyping(let isTyping):
+                self?.chatPartnerIsTyping = isTyping
             }
         }.store(in: &subscriptions)
     }

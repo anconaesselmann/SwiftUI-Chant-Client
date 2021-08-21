@@ -4,7 +4,6 @@
 import Combine
 
 class MockNetworking: SocketNetworkingProtocol {
-
     var status: AnyPublisher<SocketNetworking.Status, Never> = Just(.connected).eraseToAnyPublisher()
     var messageStatus = PassthroughSubject<SocketNetworking.MessageStatus, Never>().eraseToAnyPublisher()
     func joinChat(with user: User) { }
@@ -14,6 +13,7 @@ class MockNetworking: SocketNetworkingProtocol {
     func logIn(token: Token) { }
     func newUser(email: String, name: String, password: String) { }
     func logOut(token: Token) { }
+    func updateIsTyping(_ isTyping: Bool) { }
 }
 
 class MockHistory: HistoryProtocol {

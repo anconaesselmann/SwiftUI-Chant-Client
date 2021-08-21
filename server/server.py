@@ -166,6 +166,24 @@ def receive_message(client_socket):
         auth.log_out(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
         print("Logged out")
         return False
+
+    elif message.message_type == ClientRequestType.TYPING_STATUS_UPDATE:
+        print("TYPING_STATUS_UPDATE")
+        request = TypingStatusUpdateRequest.fromJSON(json_data = message.data)
+        print("request: ", request.is_typing, request.user_id, request.chat_id, request.token)
+        token = auth.validate(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
+        if token is None:
+            print("Not a valid token")
+            return False
+        print("Valid status update")
+
+        sender_name = auth.name_for_id(user_id = uuid.UUID(request.user_id))
+
+        # print("Creating server status update")
+        server_status_update = TypingStatusUpdateResponse(is_typing = request.is_typing, sender_name = sender_name, chat_id = uuid.UUID(request.chat_id), token = request.token)
+
+        print("server status update: ", server_status_update)
+        return server_status_update
     else:
         print("Unknown message")
         return False
@@ -214,16 +232,26 @@ while True:
             # Get user by notified socket, so we will know who sent the message
             user = clients[notified_socket]
 
-            print(f'Received message from {user.name}: {message.body}')
+            if isinstance(message, ChatMessageResponse):
+                print(f'Received message from {user.name}: {message.body}')
+                # Iterate over connected clients and broadcast message
+                for client_socket in clients:
+                    # # But don't sent it to sender
+                    if client_socket != notified_socket:
+                        serialized = serialize(message = message)
+                        print(serialized)
+                        client_socket.send(serialized.encode())
+            elif isinstance(message, TypingStatusUpdateResponse):
+                print(f'Status update from {user.name}: {message.is_typing}')
+                # Iterate over connected clients and broadcast message
+                for client_socket in clients:
+                    # # But don't sent it to sender
+                    if client_socket != notified_socket:
+                        serialized = serialize(message = message)
+                        print(serialized)
+                        client_socket.send(serialized.encode())
 
-            # Iterate over connected clients and broadcast message
-            for client_socket in clients:
-
-                # # But don't sent it to sender
-                if client_socket != notified_socket:
-                    serialized = serialize(message = message)
-                    print(serialized)
-                    client_socket.send(serialized.encode())
+            
 
     # It's not really necessary to have this, but will handle some socket exceptions just in case
     for notified_socket in exception_sockets:

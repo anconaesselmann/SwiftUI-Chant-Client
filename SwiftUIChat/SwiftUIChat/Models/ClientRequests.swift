@@ -4,7 +4,7 @@
 import Foundation
 
 enum ClientRequestType: Int {
-    case signup, emailLogin, tokenLogin, chatMessage, loggedOut, isTyping, stoppedTyping, messageRead
+    case signup, emailLogin, tokenLogin, chatMessage, loggedOut, typingStatusUpdate, messageRead
 }
 
 struct SignupRequest: Request {
@@ -55,4 +55,15 @@ struct LogoutRequest: Request {
 
 extension LogoutRequest {
     var requestType: ClientRequestType { .loggedOut }
+}
+
+struct TypingStatusUpdateRequest: Request {
+    let isTyping: Bool
+    let userId: String
+    let chatId: String
+    let token: String
+}
+
+extension TypingStatusUpdateRequest {
+    var requestType: ClientRequestType { .typingStatusUpdate }
 }

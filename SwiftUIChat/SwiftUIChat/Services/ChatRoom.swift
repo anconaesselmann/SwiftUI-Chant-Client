@@ -14,6 +14,7 @@ protocol SocketNetworkingProtocol: AnyObject {
     func logIn(email: String, password: String)
     func logIn(token: Token)
     func logOut(token: Token)
+    func updateIsTyping(_ isTyping: Bool)
 }
 
 class SocketNetworking: SocketNetworkingProtocol {
@@ -35,6 +36,7 @@ class SocketNetworking: SocketNetworkingProtocol {
     enum MessageStatus {
         case received(Message)
         case sent(Message)
+        case isTyping(Bool)
     }
 
     private let messageStatusSubject = PassthroughSubject<MessageStatus, Never>()
@@ -128,6 +130,18 @@ class SocketNetworking: SocketNetworkingProtocol {
         }
     }
 
+    func updateIsTyping(_ isTyping: Bool) {
+        guard let token = token else {
+            return
+        }
+        // TODO: ChatID is not real
+        let request = TypingStatusUpdateRequest(isTyping: isTyping, userId: token.userId, chatId: UUID().uuidString, token: token.token)
+        guard let encoded = request.encoded else {
+            return
+        }
+        socket.write(data: encoded)
+    }
+
     func stopChatSession() {
         socket.close()
     }
@@ -158,6 +172,13 @@ class SocketNetworking: SocketNetworkingProtocol {
                        messageStatusSubject.send(.received(message))
                     } else {
                         print("Could not read chat message")
+                    }
+                case .typingStatusUpdate:
+                    if let statusUpdate = statusUpdate(from: packet) {
+                        print("Status update: ", statusUpdate)
+                        messageStatusSubject.send(.isTyping(statusUpdate.isTyping))
+                    } else {
+                        print("Could not read status update")
                     }
                 }
             } catch {
@@ -194,6 +215,13 @@ class SocketNetworking: SocketNetworkingProtocol {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return try? decoder.decode(Token.self, from: packet.data)
+    }
+
+    private func statusUpdate(from packet: Packet) -> TypingStatusUpdateResponse? {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        print(String(data: packet.data, encoding: .utf8))
+        return try? decoder.decode(TypingStatusUpdateResponse.self, from: packet.data)
     }
 }
 

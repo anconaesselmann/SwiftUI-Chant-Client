@@ -4,7 +4,7 @@
 import SwiftUI
 
 struct ChatComposeView: View {
-    @State var message: String = ""
+    @Binding var message: String
 
     let onSend: (String) -> Void
 
@@ -26,9 +26,9 @@ struct ChatComposeView: View {
 }
 
 struct ChatComposeView_Previews: PreviewProvider {
-
+    @State static var message: String = ""
     static var previews: some View {
-        ChatComposeView() { _ in
+        ChatComposeView(message: $message) { _ in
 
         }
         .frame(width: 400, height: 200)

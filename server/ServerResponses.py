@@ -4,6 +4,7 @@ import json
 class ServerResponseType(Enum):
     LOGGED_IN = 0
     CHAT_MESSAGE = 1
+    TYPING_STATUS_UPDATE = 2
 
 class LoggedInResponse:
     MESSAGE_TYPE = ServerResponseType.LOGGED_IN
@@ -36,5 +37,24 @@ class ChatMessageResponse:
             "sender_name": self.sender_name,
             "body": self.body,
             "date": self.date.__str__()
+        }
+        return json.dumps(dictionary, sort_keys=True, indent=None)
+
+class TypingStatusUpdateResponse:
+    MESSAGE_TYPE = ServerResponseType.TYPING_STATUS_UPDATE
+    def __init__(self, is_typing, sender_name, chat_id, token):
+        self.is_typing = is_typing
+        self.sender_name = sender_name
+        self.chat_id = chat_id
+
+    def fromJSON(json_data):
+        dictionary = json.loads(json_data.decode('utf-8'))
+        return TypingStatusUpdateRequest(**dictionary)
+
+    def toJSON(self):
+        dictionary = {
+            "is_typing": self.is_typing,
+            "sender_name": self.sender_name,
+            "chat_id": self.chat_id.__str__()
         }
         return json.dumps(dictionary, sort_keys=True, indent=None)
