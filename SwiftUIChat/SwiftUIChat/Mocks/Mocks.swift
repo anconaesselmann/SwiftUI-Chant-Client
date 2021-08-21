@@ -3,30 +3,26 @@
 
 import Combine
 
-class MockChat: ChatProtocol {
-    var status: AnyPublisher<ChatRoom.Status, Never> = Just(.connected).eraseToAnyPublisher()
+class MockNetworking: SocketNetworkingProtocol {
 
-    var messageStatus = PassthroughSubject<ChatRoom.MessageStatus, Never>().eraseToAnyPublisher()
-
+    var status: AnyPublisher<SocketNetworking.Status, Never> = Just(.connected).eraseToAnyPublisher()
+    var messageStatus = PassthroughSubject<SocketNetworking.MessageStatus, Never>().eraseToAnyPublisher()
     func joinChat(with user: User) { }
     func send(message: Message) { }
     func stopChatSession() { }
+    func logIn(email: String, password: String) { }
+    func logIn(token: Token) { }
+    func newUser(email: String, name: String, password: String) { }
+    func logOut(token: Token) { }
 }
-
 
 class MockHistory: HistoryProtocol {
     var history: AnyPublisher<[Message], Never> = Just([]).eraseToAnyPublisher()
-
     func add(message: Message) { }
 }
 
 class MockLoginManager: LoginManagerProtocol {
-    func logIn(_ user: User) {
-
-    }
-
-    func logout() {
-
-    }
-
+    var userId: String?
+    func logIn(_ token: Token) { }
+    func logout() { }
 }

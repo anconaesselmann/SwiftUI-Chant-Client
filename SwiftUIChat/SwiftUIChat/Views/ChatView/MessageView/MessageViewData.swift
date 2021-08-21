@@ -5,7 +5,6 @@ import Foundation
 
 struct MessageViewData {
     let dateString: String
-    let userName: String
     let type: MessageType
     let body: String
 
@@ -17,7 +16,7 @@ struct MessageViewData {
 }
 
 extension Message {
-    func viewData(given user: User) -> MessageViewData {
-        MessageViewData(dateString: MessageViewData.dateString(for: date), userName: self.user.name, type: user.name == self.user.name ? .sent : .recieved, body: body)
+    func viewData(given sender: UUID) -> MessageViewData {
+        MessageViewData(dateString: MessageViewData.dateString(for: date), type: sender == self.sender ? .sent : .recieved, body: body)
     }
 }

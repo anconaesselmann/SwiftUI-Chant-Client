@@ -58,14 +58,14 @@ struct ChatView: View {
 import Combine
 
 struct ChatView_Previews: PreviewProvider {
-    static let loginManager = LoginManager()
-    static let user = User(name: "Axel")
-    static let vm = ChatViewViewModel(user: user, chatRoom: MockChat(), messageHistory: {
+    static let loginManager = LoginManager(networking: MockNetworking())
+    static let sender = UUID()
+    static let vm = ChatViewViewModel(networking: MockNetworking(), messageHistory: {
         let history = MockHistory()
         history.history = Just(
             [
-                Message(uuid: UUID(), date: Date(), user: User(name: "Axel"), body: "Hello world"),
-                Message(uuid: UUID(), date: Date(), user: User(name: "Sam"), body: "Mewo")
+                Message(uuid: UUID(), date: Date(), sender: sender, body: "Hello world"),
+                Message(uuid: UUID(), date: Date(), sender: UUID(), body: "Mewo")
             ]
         ).eraseToAnyPublisher()
         return history

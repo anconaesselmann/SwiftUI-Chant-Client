@@ -37,6 +37,10 @@
 		97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */; };
 		97CAF45226CE036A00B5DA23 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45126CE036A00B5DA23 /* LoginManager.swift */; };
 		97CAF45526CE2E0800B5DA23 /* ShowdowModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */; };
+		97CAF45726CFAA1D00B5DA23 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45626CFAA1D00B5DA23 /* SignupView.swift */; };
+		97CAF45926CFAC7300B5DA23 /* SignupRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45826CFAC7300B5DA23 /* SignupRequest.swift */; };
+		97CAF45B26CFAF9400B5DA23 /* EmailLoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45A26CFAF9400B5DA23 /* EmailLoginRequest.swift */; };
+		97CAF45D26D06B6500B5DA23 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF45C26D06B6500B5DA23 /* Packet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +97,10 @@
 		97CAF44E26CDD77A00B5DA23 /* ChatComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatComposeView.swift; sourceTree = "<group>"; };
 		97CAF45126CE036A00B5DA23 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		97CAF45426CE2E0700B5DA23 /* ShowdowModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowdowModifier.swift; sourceTree = "<group>"; };
+		97CAF45626CFAA1D00B5DA23 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		97CAF45826CFAC7300B5DA23 /* SignupRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRequest.swift; sourceTree = "<group>"; };
+		97CAF45A26CFAF9400B5DA23 /* EmailLoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailLoginRequest.swift; sourceTree = "<group>"; };
+		97CAF45C26D06B6500B5DA23 /* Packet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				976A40BD26CB236A00372210 /* ContentView.swift */,
+				97CAF45626CFAA1D00B5DA23 /* SignupView.swift */,
 				976A40EC26CB325E00372210 /* LoginView.swift */,
 				97CAF43C26CCF73F00B5DA23 /* ChatView */,
 			);
@@ -209,6 +218,9 @@
 			children = (
 				97CAF3EC26CB590600B5DA23 /* Message.swift */,
 				97CAF3EF26CB592400B5DA23 /* User.swift */,
+				97CAF45826CFAC7300B5DA23 /* SignupRequest.swift */,
+				97CAF45A26CFAF9400B5DA23 /* EmailLoginRequest.swift */,
+				97CAF45C26D06B6500B5DA23 /* Packet.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -423,11 +435,13 @@
 				97CAF3E926CB58A300B5DA23 /* ChatRoom.swift in Sources */,
 				976A40E926CB250F00372210 /* MessageView.swift in Sources */,
 				976A40BE26CB236A00372210 /* ContentView.swift in Sources */,
+				97CAF45D26D06B6500B5DA23 /* Packet.swift in Sources */,
 				976A40EF26CB33B500372210 /* ChatView.swift in Sources */,
 				97CAF44A26CDD29700B5DA23 /* MessageViews.swift in Sources */,
 				97CAF3F026CB592400B5DA23 /* User.swift in Sources */,
 				97CAF3F226CB595C00B5DA23 /* NavigationLazyView.swift in Sources */,
 				97CAF42E26CBB06800B5DA23 /* FlippedUpsideDown.swift in Sources */,
+				97CAF45B26CFAF9400B5DA23 /* EmailLoginRequest.swift in Sources */,
 				97CAF44F26CDD77A00B5DA23 /* ChatComposeView.swift in Sources */,
 				97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */,
 				976A40ED26CB325E00372210 /* LoginView.swift in Sources */,
@@ -441,9 +455,11 @@
 				97CAF45526CE2E0800B5DA23 /* ShowdowModifier.swift in Sources */,
 				97CAF43F26CCFC5200B5DA23 /* Mocks.swift in Sources */,
 				97CAF44426CDC96C00B5DA23 /* FromView.swift in Sources */,
+				97CAF45926CFAC7300B5DA23 /* SignupRequest.swift in Sources */,
 				97CAF3ED26CB590600B5DA23 /* Message.swift in Sources */,
 				97CAF43926CCF62600B5DA23 /* MessageHistory.swift in Sources */,
 				97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */,
+				97CAF45726CFAA1D00B5DA23 /* SignupView.swift in Sources */,
 				97CAF43026CBB1FE00B5DA23 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

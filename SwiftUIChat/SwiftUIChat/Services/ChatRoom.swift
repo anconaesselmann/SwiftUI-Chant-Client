@@ -4,15 +4,19 @@
 import Foundation
 import Combine
 
-protocol ChatProtocol {
-    var status: AnyPublisher<ChatRoom.Status, Never> { get }
-    var messageStatus: AnyPublisher<ChatRoom.MessageStatus, Never> { get }
-    func joinChat(with user: User)
+protocol SocketNetworkingProtocol: AnyObject {
+    var status: AnyPublisher<SocketNetworking.Status, Never> { get }
+    var messageStatus: AnyPublisher<SocketNetworking.MessageStatus, Never> { get }
     func send(message: Message)
     func stopChatSession()
+
+    func newUser(email: String, name: String, password: String)
+    func logIn(email: String, password: String)
+    func logIn(token: Token)
+    func logOut(token: Token)
 }
 
-class ChatRoom: ChatProtocol {
+class SocketNetworking: SocketNetworkingProtocol {
 
     enum Status {
         case notConnected
@@ -45,15 +49,16 @@ class ChatRoom: ChatProtocol {
         statusSubject.eraseToAnyPublisher()
     }
 
-    private var user: User?
-
     deinit {
+        print("Deinitializing")
         stopChatSession()
     }
 
     private let socket = Socket()
 
     private var subscriptions = Set<AnyCancellable>()
+
+    let queue = DispatchQueue(label: "queue")
 
     init() {
         socket.event
@@ -71,30 +76,54 @@ class ChatRoom: ChatProtocol {
             }.store(in: &subscriptions)
     }
 
-    func joinChat(with user: User) {
-        if self.user == user {
-            return
-        }
-        self.user = user
+    func newUser(email: String, name: String, password: String) {
         self.socket.open(url: Constants.socketUrlString, socket: Constants.socketPort)
-        let message = Self.header(for: user.name) + user.name
 
-        guard let data = message.data(using: .utf8) else {
+        let request = SignupRequest(email: email, name: name, password: password)
+        guard let encoded = request.encoded else {
             return
         }
-        self.socket.write(data: data)
+        socket.write(data: encoded)
+    }
+
+    func logIn(email: String, password: String) {
+        self.socket.open(url: Constants.socketUrlString, socket: Constants.socketPort)
+
+        let request = EmailLoginRequest(email: email, password: password)
+        guard let encoded = request.encoded else {
+            return
+        }
+        socket.write(data: encoded)
+    }
+
+    func logIn(token: Token) {
+        self.socket.open(url: Constants.socketUrlString, socket: Constants.socketPort)
+
+        let request = TokenLoginRequest(userId: token.userId, token: token.token)
+        guard let encoded = request.encoded else {
+            return
+        }
+        socket.write(data: encoded)
+    }
+
+    func logOut(token: Token) {
+        let request = LogoutRequest(userId: token.userId, token: token.token)
+        guard let encoded = request.encoded else {
+            return
+        }
+        socket.write(data: encoded)
     }
 
     func send(message: Message) {
-        guard let jsonString = message.jsonString else {
-            statusSubject.send(.error(.couldNotSendMessage))
+        guard let token = self.token else {
             return
         }
-        let messageString = Self.header(for: jsonString) + jsonString
-        guard let data = messageString.data(using: .utf8) else {
+        let request = ChatMessageRequest(senderId: message.sender.uuidString, chatId: UUID().uuidString, messageId: UUID().uuidString, token: token.token, body: message.body)
+        guard let encoded = request.encoded else {
             return
         }
-        self.socket.write(data: data) { [weak self] in
+        print("Message sent: ", String(data: encoded, encoding: .utf8) ?? "")
+        socket.write(data: encoded) { [weak self] in
             self?.messageStatusSubject.send(.sent(message))
         }
     }
@@ -107,13 +136,35 @@ class ChatRoom: ChatProtocol {
         return String(Array("\(string.count)          ")[..<10])
     }
 
+    var token: Token?
+
     private func eventReceived(_ event: Socket.Event) {
+        print("Event recieved: ", event)
         switch event {
         case .data(let data):
-            guard let message = messageFromData(data) else {
-                return
+            do {
+                let packet = try Packet(data)
+                switch packet.type {
+                case .newUser, .emailLogin, .tokenLogin, .chatClient, .loggedOut: ()
+                case .loggedIn:
+                    if let token = token(from: packet) {
+                        print(token)
+                        self.token = token
+                        NotificationCenter.default.post(name: .loggedIn, object: nil, userInfo: token.dict)
+                    } else {
+                        print("Invalid token")
+                    }
+                case .chatServer:
+                    if let message = message(from: packet) {
+                       messageStatusSubject.send(.received(message))
+                    } else {
+                        print("Could not read chat message")
+                    }
+                }
+            } catch {
+                statusSubject.send(.error(ConnectionError.disconnected))
+                print("Could not extract packet + \(error.localizedDescription)")
             }
-            messageStatusSubject.send(.received(message))
         case .bytesWritten: ()
         case .error(let error):
             statusSubject.send(.error(.error(error)))
@@ -131,24 +182,46 @@ class ChatRoom: ChatProtocol {
         }
     }
 
-    private func messageFromData(_ data: Data) -> Message? {
-        guard let string = String(data: data, encoding: .utf8) else {
-            statusSubject.send(.error(.couldNotReadMessage))
+    private func message(from packet: Packet) -> Message? {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let response = try? decoder.decode(ChatMessageResponse.self, from: packet.data) else {
             return nil
         }
-        let characters = Array(string)
-        guard !characters.isEmpty else {
-            statusSubject.send(.notConnected)
+        return Message(uuid: UUID(), date: Date(), sender: UUID(), body: response.body)
+    }
+
+    private func token(from packet: Packet) -> Token? {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try? decoder.decode(Token.self, from: packet.data)
+    }
+}
+
+struct Token: Codable {
+    let token: String
+    let userId: String
+    let expires: String
+
+    init(token: String, userId: String, expires: String) {
+        self.token = token
+        self.userId = userId
+        self.expires = expires
+    }
+
+    init?(dict: [AnyHashable: Any]) {
+        guard let encoded = try? JSONSerialization.data(withJSONObject: dict, options: []) else { return nil }
+        let decoder = JSONDecoder()
+        if let token = try? decoder.decode(Self.self, from: encoded) {
+            self = token
+        } else {
             return nil
         }
-        let userHeader = String(characters[..<10]).trimmingCharacters(in: .whitespaces)
-        guard let userNameLenght = Int(userHeader) else {
-            statusSubject.send(.error(.couldNotReadMessage))
-            return nil
-        }
-        let messageHeaderStart = userNameLenght + 10
-        let messageStart = messageHeaderStart + 10
-        let jsonString = String(characters[messageStart...])
-        return Message(jsonString: jsonString)
+    }
+
+    var dict: [String: Any]? {
+        let encoder = JSONEncoder()
+        guard let encoded = try? encoder.encode(self) else { return nil }
+        return try? JSONSerialization.jsonObject(with: encoded, options: []) as? [String:Any]
     }
 }

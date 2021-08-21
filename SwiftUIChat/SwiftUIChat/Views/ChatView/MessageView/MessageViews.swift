@@ -37,7 +37,7 @@ struct RecievedMessageView: View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 DateHeaderView(dateString: message.dateString)
-                FromView(fromString: "From: \(message.userName)")
+//                FromView(fromString: "From: \(message.userName)")
                 MessageBodyView(messageBody: message.body)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

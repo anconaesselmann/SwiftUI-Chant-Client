@@ -11,11 +11,11 @@ enum MessageType: Int, Codable {
 struct Message: Hashable, Codable {
     let uuid: UUID
     let date: Date
-    let user: User
+    let sender: UUID
     let body: String
 
-    func type(for user: User) -> MessageType {
-        user.name == self.user.name ? .sent : .recieved
+    func type(for uuid: UUID) -> MessageType {
+        uuid.uuidString == self.sender.uuidString ? .sent : .recieved
     }
 }
 

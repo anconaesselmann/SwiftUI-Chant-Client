@@ -1,10 +1,11 @@
-//  Created by Axel Ancona Esselmann on 8/16/21.
+//  Created by Axel Ancona Esselmann on 8/20/21.
 //
 
 import SwiftUI
 
-struct LoginView: View {
+struct SignupView: View {
     @State var email: String = ""
+    @State var username: String = ""
     @State var password: String = ""
 
     @Binding var showSignup: Bool
@@ -17,31 +18,33 @@ struct LoginView: View {
             TextField("Email", text: $email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
+            TextField("Username", text: $username)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
             TextField("Password", text: $password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             Button(action: {
-                guard !email.isEmpty, !password.isEmpty else {
+                guard !username.isEmpty, !email.isEmpty, !password.isEmpty else {
                     return
                 }
-                networking.logIn(email: email, password: password)
+                networking.newUser(email: email, name: username, password: password)
+                showSignup = false
             }) {
-                Text("Login")
+                Text("Sign Up")
             }.padding([.bottom], .mediumPadding)
             Button(action: {
-                self.showSignup = true
+                self.showSignup = false
             }) {
-                Text("Don't have an account?")
+                Text("Already have an account?")
             }.padding([.bottom], .mediumPadding)
-        }.navigationBarTitle("Login", displayMode: .inline)
+        }.navigationBarTitle("Sign up", displayMode: .inline)
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
+struct SignupView_Previews: PreviewProvider {
     @State static var showSignup: Bool = false
     static var previews: some View {
-        LoginView(showSignup: $showSignup, networking: MockNetworking(), loginManager: MockLoginManager())
-            .frame(width: 300, height: 500)
-            .previewLayout(.sizeThatFits)
+        SignupView(showSignup: $showSignup, networking: MockNetworking(), loginManager: MockLoginManager())
     }
 }

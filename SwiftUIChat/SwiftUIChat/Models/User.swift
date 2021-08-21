@@ -3,6 +3,10 @@
 
 import Foundation
 
-struct User: Hashable, Codable {
+protocol User: Codable {
+    var name: String { get }
+}
+
+struct LoggedOutUser: Hashable, User {
     let name: String
 }

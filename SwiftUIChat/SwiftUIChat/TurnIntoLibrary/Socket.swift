@@ -53,7 +53,9 @@ class Socket: NSObject {
         }
     }
 
-    var socketAccesQueue = DispatchQueue.global()
+//    var socketAccesQueue = DispatchQueue.global()
+
+    private let parseQueue = DispatchQueue(label: "com.socketio.parseQueue", attributes: .concurrent)
 
     func open(url: URL, socket: UInt32) {
         close()
@@ -116,31 +118,34 @@ class Socket: NSObject {
     }
 
     private func readAvailableBytes(stream: InputStream) {
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: maxReadLength)
+        parseQueue.sync {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: maxReadLength)
 
-        while stream.hasBytesAvailable {
-            guard let numberOfBytesRead = inputStream?.read(buffer, maxLength: maxReadLength) else {
-                continue
-            }
+            while stream.hasBytesAvailable {
+                guard let numberOfBytesRead = inputStream?.read(buffer, maxLength: maxReadLength) else {
+                    continue
+                }
 
-            if numberOfBytesRead < 0, let error = stream.streamError {
-                eventSubject.send(.error(error))
-                break
+                if numberOfBytesRead < 0, let error = stream.streamError {
+                    eventSubject.send(.error(error))
+                    break
+                }
+                guard
+                    let string = String(
+                        bytesNoCopy: buffer,
+                        length: numberOfBytesRead,
+                        encoding: .utf8,
+                        freeWhenDone: true
+                    ),
+                    let data = string.data(using: .utf8)
+                else {
+                    eventSubject.send(.error(SocketError.invalidDataReceived))
+                    continue
+                }
+                eventSubject.send(.data(data))
             }
-            guard
-                let string = String(
-                    bytesNoCopy: buffer,
-                    length: numberOfBytesRead,
-                    encoding: .utf8,
-                    freeWhenDone: true
-                ),
-                let data = string.data(using: .utf8)
-            else {
-                eventSubject.send(.error(SocketError.invalidDataReceived))
-                continue
-            }
-            eventSubject.send(.data(data))
         }
+
     }
 }
 

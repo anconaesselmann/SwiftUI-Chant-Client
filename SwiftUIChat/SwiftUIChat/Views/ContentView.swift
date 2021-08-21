@@ -3,9 +3,17 @@
 
 import SwiftUI
 
+class Container {
+    var networking: SocketNetworking = SocketNetworking()
+    lazy var loginManager = LoginManager(networking: networking)
+
+    static let shared = Container()
+}
+
 struct ContentView: View {
 
-    @StateObject var loginManager = LoginManager()
+    @StateObject var loginManager = Container.shared.loginManager
+    @State var showSignup = false
 
     var body: some View {
         NavigationView {
@@ -13,14 +21,35 @@ struct ContentView: View {
                 Color.background.edgesIgnoringSafeArea(.all)
                 Group {
                     switch loginManager.state {
-                    case .loggedIn(let user):
-                        let vm = ChatViewViewModel(user: user, loginManager: loginManager)
+                    case .loggedIn:
+                        let vm = ChatViewViewModel(
+                            networking: Container.shared.networking,
+                            loginManager: loginManager
+                        )
                         ChatView(viewModel: vm)
                     case .loggedOut:
-                        LoginView(loginManager: loginManager)
+                        Group {
+                            if showSignup {
+                                SignupView(
+                                    showSignup: $showSignup,
+                                    networking: Container.shared.networking,
+                                    loginManager: loginManager
+                                )
+                            } else {
+                                LoginView(
+                                    showSignup: $showSignup,
+                                    networking: Container.shared.networking,
+                                    loginManager: loginManager
+                                )
+                            }
+                        }
+                        .frame(width: 250, alignment: .center)
+                        .background(Color.background)
+                        .cornerRadius(10)
+                        .shadow(.background)
                     }
                 }
-            }.navigationBarTitle("Login", displayMode: .inline)
+            }
         }
     }
 }

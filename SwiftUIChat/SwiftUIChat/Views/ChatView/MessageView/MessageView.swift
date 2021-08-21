@@ -20,9 +20,10 @@ struct MessageView: View {
 }
 
 struct MessageView_Previews: PreviewProvider {
-    static let user = User(name: "axel")
-    static let messageSent = Message(uuid: UUID(), date: Date(), user: user, body: "Hello World").viewData(given: user)
-    static let messageRecieved = Message(uuid: UUID(), date: Date(), user: User(name: "sam"), body: "Hello World back").viewData(given: user)
+    static let user = LoggedOutUser(name: "axel")
+    static let sender = UUID()
+    static let messageSent = Message(uuid: UUID(), date: Date(), sender: sender, body: "Hello World").viewData(given: sender)
+    static let messageRecieved = Message(uuid: UUID(), date: Date(), sender: UUID(), body: "Hello World back").viewData(given: sender)
     
     static var previews: some View {
         Group {
