@@ -32,29 +32,10 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
     @AppStorage("expires") var expiresString: String?
     @AppStorage("userId") var userIdString: String?
 
-    var token: Token? {
-        guard let tokenString = tokenString, let tokenUuid = UUID(uuidString: tokenString), let expiresString = expiresString, let userIdString = userIdString, let userUuid = UUID(uuidString: userIdString) else {
-            return nil
-        }
-        return Token(token: tokenUuid, userId: userUuid, expires: expiresString)
-    }
+    var token: Token? { state.token }
 
     @Published var state: State = .loggedOut {
-        didSet {
-            switch state {
-            case .loggedIn(let token):
-                tokenString = token.token.uuidString
-                expiresString = token.expires
-                userIdString = token.userId.uuidString
-            case .loggedOut:
-                tokenString = nil
-                expiresString = nil
-                userIdString = nil
-                if let token = state.token {
-                    networking.logOut(token: token)
-                }
-            }
-        }
+        didSet { store(state: state) }
     }
 
     let networking: SocketNetworkingProtocol
@@ -62,8 +43,27 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
     init(networking: SocketNetworkingProtocol) {
         self.networking = networking
         NotificationCenter.default.addObserver(self, selector: #selector(loggedInNotification(notification:)), name: .loggedIn, object: nil)
-        if let token = token {
-            networking.logIn(token: token)
+        restore()
+    }
+
+    private func restore() {
+        guard let tokenString = tokenString, let tokenUuid = UUID(uuidString: tokenString), let expiresString = expiresString, let userIdString = userIdString, let userUuid = UUID(uuidString: userIdString) else {
+            return
+        }
+        let token = Token(token: tokenUuid, userId: userUuid, expires: expiresString)
+        networking.logIn(token: token)
+    }
+
+    private func store(state: State) {
+        switch state {
+        case .loggedIn(let token):
+            tokenString = token.token.uuidString
+            expiresString = token.expires
+            userIdString = token.userId.uuidString
+        case .loggedOut:
+            tokenString = nil
+            expiresString = nil
+            userIdString = nil
         }
     }
 
@@ -79,11 +79,9 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
     }
 
     func logout() {
+        if let token = state.token {
+            networking.logOut(token: token)
+        }
         state = .loggedOut
     }
-}
-
-struct LoggedInUser: User {
-    let name: String
-    let token: Token
 }
