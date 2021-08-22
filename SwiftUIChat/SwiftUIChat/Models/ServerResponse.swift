@@ -8,21 +8,19 @@ enum ServerResponseType: Int {
 }
 
 struct ChatMessageResponse: Codable {
-    let chatId: String
-    let messageId: String
+    let chatId: UUID
+    let messageId: UUID
     let senderName: String
     let body: String
     let date: String
 }
 
 extension ChatMessageResponse {
-    var requestType: ServerResponseType {
-        .chatMessage
-    }
+    var requestType: ServerResponseType { .chatMessage }
 }
 
 struct TypingStatusUpdateResponse: Codable {
-    let chatId: String
+    let chatId: UUID
     let isTyping: Bool
     let senderName: String
 }
@@ -34,7 +32,7 @@ extension TypingStatusUpdateResponse {
 }
 
 struct MessageReceivedServerNotification: Codable {
-    let messageId: String
+    let messageId: UUID
 }
 
 extension MessageReceivedServerNotification {

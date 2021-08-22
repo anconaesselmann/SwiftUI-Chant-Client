@@ -11,7 +11,7 @@ extension Notification.Name {
 protocol LoginManagerProtocol: AnyObject {
     func logIn(_ token: Token)
     func logout()
-    var userId: String? { get }
+    var token: Token? { get }
 }
 
 class LoginManager: ObservableObject, LoginManagerProtocol {
@@ -28,21 +28,31 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
         }
     }
 
-    @AppStorage("token") var token: String?
-    @AppStorage("expires") var expires: String?
-    @AppStorage("userId") var userId: String?
+    @AppStorage("token") var tokenString: String?
+    @AppStorage("expires") var expiresString: String?
+    @AppStorage("userId") var userIdString: String?
+
+    var token: Token? {
+        guard let tokenString = tokenString, let tokenUuid = UUID(uuidString: tokenString), let expiresString = expiresString, let userIdString = userIdString, let userUuid = UUID(uuidString: userIdString) else {
+            return nil
+        }
+        return Token(token: tokenUuid, userId: userUuid, expires: expiresString)
+    }
 
     @Published var state: State = .loggedOut {
         didSet {
             switch state {
             case .loggedIn(let token):
-                self.token = token.token
-                expires = token.expires
-                userId = token.userId
+                tokenString = token.token.uuidString
+                expiresString = token.expires
+                userIdString = token.userId.uuidString
             case .loggedOut:
-                token = nil
-                expires = nil
-                userId = nil
+                tokenString = nil
+                expiresString = nil
+                userIdString = nil
+                if let token = state.token {
+                    networking.logOut(token: token)
+                }
             }
         }
     }
@@ -52,8 +62,7 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
     init(networking: SocketNetworkingProtocol) {
         self.networking = networking
         NotificationCenter.default.addObserver(self, selector: #selector(loggedInNotification(notification:)), name: .loggedIn, object: nil)
-        if let token = token, let expires = expires, let userId = userId {
-            let token = Token(token: token, userId: userId, expires: expires)
+        if let token = token {
             networking.logIn(token: token)
         }
     }
@@ -70,12 +79,6 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
     }
 
     func logout() {
-        if let token = state.token {
-            networking.logOut(token: token)
-        }
-        token = nil
-        expires = nil
-        userId = nil
         state = .loggedOut
     }
 }

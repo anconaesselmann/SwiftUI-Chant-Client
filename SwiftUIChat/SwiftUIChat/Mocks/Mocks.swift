@@ -24,7 +24,7 @@ class MockHistory: HistoryProtocol {
 }
 
 class MockLoginManager: LoginManagerProtocol {
-    var userId: String?
+    var token: Token?
     func logIn(_ token: Token) { }
     func logout() { }
 }

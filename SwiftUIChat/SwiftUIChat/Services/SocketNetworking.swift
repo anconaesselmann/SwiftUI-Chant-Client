@@ -121,7 +121,7 @@ class SocketNetworking: SocketNetworkingProtocol {
         guard let token = self.token else {
             return
         }
-        let request = ChatMessageRequest(senderId: message.sender.uuidString, chatId: UUID().uuidString, messageId: message.uuid.uuidString, token: token.token, body: message.body)
+        let request = ChatMessageRequest(senderId: message.sender, chatId: UUID(), messageId: message.uuid, token: token.token, body: message.body)
         guard let encoded = request.encoded else {
             return
         }
@@ -135,7 +135,7 @@ class SocketNetworking: SocketNetworkingProtocol {
         guard let token = self.token else {
             return
         }
-        let request = MessageReceivedClientNotification(messageId: message.uuid.uuidString)
+        let request = MessageReceivedClientNotification(messageId: message.uuid)
         guard let encoded = request.encoded else {
             return
         }
@@ -148,7 +148,7 @@ class SocketNetworking: SocketNetworkingProtocol {
             return
         }
         // TODO: ChatID is not real
-        let request = TypingStatusUpdateRequest(isTyping: isTyping, userId: token.userId, chatId: UUID().uuidString, token: token.token)
+        let request = TypingStatusUpdateRequest(isTyping: isTyping, userId: token.userId, chatId: UUID(), token: token.token)
         guard let encoded = request.encoded else {
             return
         }
@@ -183,7 +183,7 @@ class SocketNetworking: SocketNetworkingProtocol {
                 case .chatMessage:
                     if let decoded: ChatMessageResponse = packet.decode() {
                         let message = Message(
-                            uuid: UUID(uuidString: decoded.messageId)!,
+                            uuid: decoded.messageId,
                             date: Date(),
                             sender: UUID(),
                             body: decoded.body)
@@ -200,12 +200,9 @@ class SocketNetworking: SocketNetworkingProtocol {
                         print("Could not read status update")
                     }
                 case .messageReceived:
-                    if
-                        let receipt: MessageReceivedServerNotification = packet.decode(),
-                        let messageId = UUID(uuidString: receipt.messageId)
-                    {
+                    if let receipt: MessageReceivedServerNotification = packet.decode() {
                         print("Message read: ", receipt.messageId)
-                        messageStatusSubject.send(.messageRead(messageId))
+                        messageStatusSubject.send(.messageRead(receipt.messageId))
                     }
                 }
             } catch {
@@ -232,11 +229,11 @@ class SocketNetworking: SocketNetworkingProtocol {
 }
 
 struct Token: Codable {
-    let token: String
-    let userId: String
+    let token: UUID
+    let userId: UUID
     let expires: String
 
-    init(token: String, userId: String, expires: String) {
+    init(token: UUID, userId: UUID, expires: String) {
         self.token = token
         self.userId = userId
         self.expires = expires

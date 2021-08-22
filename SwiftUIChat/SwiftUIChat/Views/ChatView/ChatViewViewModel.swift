@@ -53,10 +53,10 @@ class ChatViewViewModel: ObservableObject {
         subscribed = true
 
         messageHistory.history.sink { [weak self] history in
-            guard let sender = self?.loginManager.userId else {
+            guard let sender = self?.loginManager.token?.userId else {
                 return
             }
-            self?.viewData = history.map { $0.viewData(given: UUID(uuidString: sender)!) }
+            self?.viewData = history.map { $0.viewData(given: sender) }
         }.store(in: &subscriptions)
 
         networking.status.sink { [weak self] status in
@@ -81,10 +81,10 @@ class ChatViewViewModel: ObservableObject {
     func send(message body: String) {
         let uuid = UUID()
         let date = Date()
-        guard let sender = loginManager.userId else {
+        guard let sender = loginManager.token?.userId else {
             return
         }
-        let message = Message(uuid: uuid, date: date, sender: UUID(uuidString: sender)!, body: body)
+        let message = Message(uuid: uuid, date: date, sender: sender, body: body)
         networking.send(message: message)
     }
 

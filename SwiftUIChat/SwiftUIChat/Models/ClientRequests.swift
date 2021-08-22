@@ -28,8 +28,8 @@ extension EmailLoginRequest {
 }
 
 struct TokenLoginRequest: Request {
-    let userId: String
-    let token: String
+    let userId: UUID
+    let token: UUID
 }
 
 extension TokenLoginRequest {
@@ -37,10 +37,10 @@ extension TokenLoginRequest {
 }
 
 struct ChatMessageRequest: Request {
-    let senderId: String
-    let chatId: String
-    let messageId: String
-    let token: String
+    let senderId: UUID
+    let chatId: UUID
+    let messageId: UUID
+    let token: UUID
     let body: String
 }
 
@@ -49,8 +49,8 @@ extension ChatMessageRequest {
 }
 
 struct LogoutRequest: Request {
-    let userId: String
-    let token: String
+    let userId: UUID
+    let token: UUID
 }
 
 extension LogoutRequest {
@@ -59,9 +59,9 @@ extension LogoutRequest {
 
 struct TypingStatusUpdateRequest: Request {
     let isTyping: Bool
-    let userId: String
-    let chatId: String
-    let token: String
+    let userId: UUID
+    let chatId: UUID
+    let token: UUID
 }
 
 extension TypingStatusUpdateRequest {
@@ -69,7 +69,7 @@ extension TypingStatusUpdateRequest {
 }
 
 struct MessageReceivedClientNotification: Request {
-    let messageId: String
+    let messageId: UUID
 }
 
 extension MessageReceivedClientNotification {
