@@ -1,7 +1,3 @@
-//
-//  MessageBodyView.swift
-//  SwiftUIChat
-//
 //  Created by Axel Ancona Esselmann on 8/18/21.
 //
 

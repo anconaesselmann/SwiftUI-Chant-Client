@@ -54,7 +54,7 @@ struct RecievedMessageView: View {
                         DateHeaderView(dateString: dateString)
                     }
                 }
-                //                FromView(fromString: "From: \(message.userName)")
+//                FromView(fromString: "From: \(message.userName)")
                 MessageBodyView(messageBody: message.body)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

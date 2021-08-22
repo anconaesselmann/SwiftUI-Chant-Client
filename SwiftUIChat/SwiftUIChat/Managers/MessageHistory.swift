@@ -18,7 +18,6 @@ class MessageHistory: HistoryProtocol {
     }
 
     func add(message: Message) {
-        print("Adding message with id: ", message.uuid)
         var value = historySubject.value
         value.append(message)
         historySubject.send(value)
@@ -27,14 +26,11 @@ class MessageHistory: HistoryProtocol {
 
     func messageRead(id: UUID) {
         var messages = historySubject.value
-        print("Should update: ", id)
-        print("Messages: ", messages)
         for i in 0..<messages.count {
             var message = messages[i]
             if message.uuid.uuidString.lowercased() == id.uuidString.lowercased() {
                 message.read = true
                 messages[i] = message
-                print("read status updated")
             }
         }
         historySubject.send(messages)

@@ -53,8 +53,6 @@ class Socket: NSObject {
         }
     }
 
-//    var socketAccesQueue = DispatchQueue.global()
-
     private let parseQueue = DispatchQueue(label: "com.socketio.parseQueue", attributes: .concurrent)
 
     func open(url: URL, socket: UInt32) {

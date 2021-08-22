@@ -61,6 +61,8 @@ class SocketNetworking: SocketNetworkingProtocol {
 
     private var subscriptions = Set<AnyCancellable>()
 
+    var token: Token?
+
     let queue = DispatchQueue(label: "queue")
 
     init() {
@@ -132,9 +134,6 @@ class SocketNetworking: SocketNetworkingProtocol {
     }
 
     private func sendReceivedReceipt(for message: Message) {
-        guard let token = self.token else {
-            return
-        }
         let request = MessageReceivedClientNotification(messageId: message.uuid)
         guard let encoded = request.encoded else {
             return
@@ -162,8 +161,6 @@ class SocketNetworking: SocketNetworkingProtocol {
     private static func header(for string: String) -> String {
         return String(Array("\(string.count)          ")[..<10])
     }
-
-    var token: Token?
 
     private func eventReceived(_ event: Socket.Event) {
         print("Event recieved: ", event)
