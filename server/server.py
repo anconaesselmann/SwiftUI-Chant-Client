@@ -5,6 +5,7 @@
 import socket
 import select
 import uuid
+from uuid import UUID
 from datetime import datetime
 
 from Auth import Authenticaton
@@ -108,15 +109,15 @@ def connect(client_socket, client_address):
             if token is None:
                 print("Email/password incorrect")
                 return False
-            user_name = auth.user_name_for(token.user_id)
+            user_name = auth.name_for_id(user_id = token.user_id)
             user = User(name = user_name, token = token)
         elif message.message_type == ClientRequestType.TOKEN_LOGIN:
             request = TokenLoginRequest.fromJSON(json_data = message.data)
-            token = auth.validate(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
+            token = auth.validate(user_id = UUID(request.user_id), token_uuid = UUID(request.token))
             if token is None:
                 print("user_id/token incorrect or expiredd")
                 return False
-            user_name = auth.user_name_for(token.user_id)
+            user_name = auth.name_for_id(user_id = token.user_id)
             user = User(name = user_name, token = token)
         else:
             print("Invalid connection message")
@@ -143,27 +144,27 @@ def receive_message(client_socket):
         print("CHAT_MESSAGE")
         request = ChatMessageRequest.fromJSON(json_data = message.data)
         print("request: ", request.sender_id, request.chat_id, request.message_id, request.token, request.body)
-        token = auth.validate(user_id = uuid.UUID(request.sender_id), token = uuid.UUID(request.token))
+        token = auth.validate(user_id = UUID(request.sender_id), token_uuid = UUID(request.token))
         if token is None:
             print("Not a valid message")
             return False
         print("Valid message")
 
         print("Valid body: ", request.body)
-        sender_name = auth.name_for_id(user_id = uuid.UUID(request.sender_id))
+        sender_name = auth.name_for_id(user_id = UUID(request.sender_id))
         print("Creating server message")
-        server_message = ChatMessageResponse(chat_id = uuid.UUID(request.chat_id), message_id = uuid.UUID(request.message_id), sender_name = sender_name, body = request.body, date = datetime.now().__str__())
+        server_message = ChatMessageResponse(chat_id = UUID(request.chat_id), message_id = UUID(request.message_id), sender_name = sender_name, body = request.body, date = datetime.now().__str__())
         print("server message: ", server_message)
         return server_message
     elif message.message_type == ClientRequestType.LOGGED_OUT:
         print("LOGGED_OUT")
         request = LogoutRequest.fromJSON(json_data = message.data)
-        token = auth.validate(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
+        token = auth.validate(user_id = UUID(request.user_id), token_uuid = UUID(request.token))
         if token is None:
             print("user_id/token incorrect or expiredd")
             return False
 
-        auth.log_out(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
+        auth.log_out(user_id = UUID(request.user_id), token_uuid = UUID(request.token))
         print("Logged out")
         return False
 
@@ -171,16 +172,16 @@ def receive_message(client_socket):
         print("TYPING_STATUS_UPDATE")
         request = TypingStatusUpdateRequest.fromJSON(json_data = message.data)
         print("request: ", request.is_typing, request.user_id, request.chat_id, request.token)
-        token = auth.validate(user_id = uuid.UUID(request.user_id), token = uuid.UUID(request.token))
+        token = auth.validate(user_id = UUID(request.user_id), token_uuid = UUID(request.token))
         if token is None:
             print("Not a valid token")
             return False
         print("Valid status update")
 
-        sender_name = auth.name_for_id(user_id = uuid.UUID(request.user_id))
+        sender_name = auth.name_for_id(user_id = UUID(request.user_id))
 
         # print("Creating server status update")
-        server_status_update = TypingStatusUpdateResponse(is_typing = request.is_typing, sender_name = sender_name, chat_id = uuid.UUID(request.chat_id), token = request.token)
+        server_status_update = TypingStatusUpdateResponse(is_typing = request.is_typing, sender_name = sender_name, chat_id = UUID(request.chat_id), token = request.token)
 
         print("server status update: ", server_status_update)
         return server_status_update
