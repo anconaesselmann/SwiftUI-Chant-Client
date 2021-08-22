@@ -10,7 +10,7 @@ struct LoginView: View {
     @Binding var showSignup: Bool
 
     let networking: SocketNetworkingProtocol
-    let loginManager: LoginManagerProtocol
+    let loginManager: LoginManager
 
     var body: some View {
         VStack {
@@ -40,7 +40,7 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     @State static var showSignup: Bool = false
     static var previews: some View {
-        LoginView(showSignup: $showSignup, networking: MockNetworking(), loginManager: MockLoginManager())
+        LoginView(showSignup: $showSignup, networking: MockNetworking(), loginManager: LoginManager())
             .frame(width: 300, height: 500)
             .previewLayout(.sizeThatFits)
     }

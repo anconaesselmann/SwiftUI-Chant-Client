@@ -3,16 +3,16 @@
 
 import SwiftUI
 
-class Container {
-    var networking: SocketNetworking = SocketNetworking()
-    lazy var loginManager = LoginManager(networking: networking)
-
-    static let shared = Container()
-}
-
 struct ContentView: View {
 
-    @StateObject var loginManager = Container.shared.loginManager
+    @ObservedObject var loginManager: LoginManager
+    let networking: SocketNetworkingProtocol
+
+    init(loginManager: LoginManager, networking: SocketNetworkingProtocol) {
+        self.loginManager = loginManager
+        self.networking = networking
+    }
+    
     @State var showSignup = false
 
     var body: some View {
@@ -23,7 +23,7 @@ struct ContentView: View {
                     switch loginManager.state {
                     case .loggedIn:
                         let vm = ChatViewViewModel(
-                            networking: Container.shared.networking,
+                            networking: networking,
                             loginManager: loginManager
                         )
                         ChatView(viewModel: vm)
@@ -32,7 +32,7 @@ struct ContentView: View {
                             if showSignup {
                                 SignupView(
                                     showSignup: $showSignup,
-                                    networking: Container.shared.networking,
+                                    networking: networking,
                                     loginManager: loginManager
                                 )
                             } else {
@@ -56,7 +56,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(loginManager: LoginManager(), networking: MockNetworking())
             .preferredColorScheme(.dark)
     }
 }

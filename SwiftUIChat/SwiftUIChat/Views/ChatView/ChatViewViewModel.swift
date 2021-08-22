@@ -27,7 +27,7 @@ class ChatViewViewModel: ObservableObject {
 
     var timer: Timer?
 
-    init(networking: SocketNetworkingProtocol = SocketNetworking(), messageHistory: HistoryProtocol = MessageHistory(), loginManager: LoginManager) {
+    init(networking: SocketNetworkingProtocol, messageHistory: HistoryProtocol = MessageHistory(), loginManager: LoginManager) {
         self.networking = networking
         self.messageHistory = messageHistory
         self.loginManager = loginManager

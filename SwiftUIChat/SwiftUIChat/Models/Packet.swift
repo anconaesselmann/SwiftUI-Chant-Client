@@ -15,7 +15,9 @@ struct Packet {
         case invalidTypeHeader
         case noHeader
         case invalidPayload
+        case decodingError(ServerResponseType, Error)
     }
+
     let type: ServerResponseType
     let data: Data
     let headers: [Headers]
@@ -55,10 +57,14 @@ struct Packet {
         self.init(type: type, data: data)
     }
 
-    func decode<T>() -> T? where T: Decodable {
+    func decode<T>() throws -> T where T: Decodable {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        print(String(data: data, encoding: .utf8))
-        return try? decoder.decode(T.self, from: data)
+        print("Decoding ", String(data: data, encoding: .utf8) ?? "")
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw PacketError.decodingError(self.type, error)
+        }
     }
 }

@@ -70,7 +70,7 @@ struct ChatView: View {
 import Combine
 
 struct ChatView_Previews: PreviewProvider {
-    static let loginManager = LoginManager(networking: MockNetworking())
+    static let loginManager = LoginManager()
     static let sender = UUID()
     static let vm = ChatViewViewModel(networking: MockNetworking(), messageHistory: {
         let history = MockHistory()

@@ -7,34 +7,30 @@ enum ServerResponseType: Int {
     case loggedIn, chatMessage, typingStatusUpdate, messageReceived
 }
 
-struct ChatMessageResponse: Codable {
+protocol ServerResponse: Codable {
+    static var serverResponseType: ServerResponseType { get }
+}
+
+struct ChatMessageResponse: ServerResponse {
     let chatId: UUID
     let messageId: UUID
     let senderName: String
     let body: String
     let date: String
+
+    static var serverResponseType: ServerResponseType { .chatMessage }
 }
 
-extension ChatMessageResponse {
-    var requestType: ServerResponseType { .chatMessage }
-}
-
-struct TypingStatusUpdateResponse: Codable {
+struct TypingStatusUpdateResponse: ServerResponse {
     let chatId: UUID
     let isTyping: Bool
     let senderName: String
+
+    static var serverResponseType: ServerResponseType { .typingStatusUpdate }
 }
 
-extension TypingStatusUpdateResponse {
-    var requestType: ServerResponseType {
-        .typingStatusUpdate
-    }
-}
-
-struct MessageReceivedServerNotification: Codable {
+struct MessageReceivedServerNotification: ServerResponse {
     let messageId: UUID
-}
 
-extension MessageReceivedServerNotification {
-    var requestType: ServerResponseType { .messageReceived }
+    static var serverResponseType: ServerResponseType { .messageReceived }
 }

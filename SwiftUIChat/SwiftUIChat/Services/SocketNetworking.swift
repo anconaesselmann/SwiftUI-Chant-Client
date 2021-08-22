@@ -61,11 +61,10 @@ class SocketNetworking: SocketNetworkingProtocol {
 
     private var subscriptions = Set<AnyCancellable>()
 
-    var token: Token?
+    var loginManager: LoginManager
 
-    let queue = DispatchQueue(label: "queue")
-
-    init() {
+    init(loginManager: LoginManager) {
+        self.loginManager = loginManager
         socket.event
             .subscribe(on: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
@@ -120,7 +119,7 @@ class SocketNetworking: SocketNetworkingProtocol {
     }
 
     func send(message: Message) {
-        guard let token = self.token else {
+        guard let token = loginManager.token else {
             return
         }
         let request = ChatMessageRequest(senderId: message.sender, chatId: UUID(), messageId: message.uuid, token: token.token, body: message.body)
@@ -143,7 +142,7 @@ class SocketNetworking: SocketNetworkingProtocol {
     }
 
     func updateIsTyping(_ isTyping: Bool) {
-        guard let token = token else {
+        guard let token = loginManager.token else {
             return
         }
         // TODO: ChatID is not real
@@ -170,37 +169,26 @@ class SocketNetworking: SocketNetworkingProtocol {
                 let packet = try Packet(data)
                 switch packet.type {
                 case .loggedIn:
-                    if let token: Token = packet.decode() {
-                        print(token)
-                        self.token = token
-                        NotificationCenter.default.post(name: .loggedIn, object: nil, userInfo: token.dict)
-                    } else {
-                        print("Invalid token")
-                    }
+                    let token: Token = try packet.decode()
+                    print(token)
+                    loginManager.logIn(token)
                 case .chatMessage:
-                    if let decoded: ChatMessageResponse = packet.decode() {
-                        let message = Message(
-                            uuid: decoded.messageId,
-                            date: Date(),
-                            sender: UUID(),
-                            body: decoded.body)
-                        messageStatusSubject.send(.received(message))
-                        sendReceivedReceipt(for: message)
-                    } else {
-                        print("Could not read chat message")
-                    }
+                    let decoded: ChatMessageResponse = try packet.decode()
+                    let message = Message(
+                        uuid: decoded.messageId,
+                        date: Date(),
+                        sender: UUID(),
+                        body: decoded.body)
+                    messageStatusSubject.send(.received(message))
+                    sendReceivedReceipt(for: message)
                 case .typingStatusUpdate:
-                    if let statusUpdate: TypingStatusUpdateResponse = packet.decode() {
-                        print("Status update: ", statusUpdate)
-                        messageStatusSubject.send(.isTyping(statusUpdate.isTyping))
-                    } else {
-                        print("Could not read status update")
-                    }
+                    let statusUpdate: TypingStatusUpdateResponse = try packet.decode()
+                    print("Status update: ", statusUpdate)
+                    messageStatusSubject.send(.isTyping(statusUpdate.isTyping))
                 case .messageReceived:
-                    if let receipt: MessageReceivedServerNotification = packet.decode() {
-                        print("Message read: ", receipt.messageId)
-                        messageStatusSubject.send(.messageRead(receipt.messageId))
-                    }
+                    let receipt: MessageReceivedServerNotification = try packet.decode()
+                    print("Message read: ", receipt.messageId)
+                    messageStatusSubject.send(.messageRead(receipt.messageId))
                 }
             } catch {
                 statusSubject.send(.error(ConnectionError.disconnected))
@@ -223,32 +211,4 @@ class SocketNetworking: SocketNetworkingProtocol {
         }
     }
 
-}
-
-struct Token: Codable {
-    let token: UUID
-    let userId: UUID
-    let expires: String
-
-    init(token: UUID, userId: UUID, expires: String) {
-        self.token = token
-        self.userId = userId
-        self.expires = expires
-    }
-
-    init?(dict: [AnyHashable: Any]) {
-        guard let encoded = try? JSONSerialization.data(withJSONObject: dict, options: []) else { return nil }
-        let decoder = JSONDecoder()
-        if let token = try? decoder.decode(Self.self, from: encoded) {
-            self = token
-        } else {
-            return nil
-        }
-    }
-
-    var dict: [String: Any]? {
-        let encoder = JSONEncoder()
-        guard let encoded = try? encoder.encode(self) else { return nil }
-        return try? JSONSerialization.jsonObject(with: encoded, options: []) as? [String:Any]
-    }
 }

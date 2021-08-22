@@ -43,7 +43,7 @@ server_socket.listen()
 # List of sockets for select.select()
 sockets_list = [server_socket]
 
-# List of connected clients - socket as a key, user header and name as data
+# List of connected clients - socket as a key, user as data
 clients = {}
 
 class User:

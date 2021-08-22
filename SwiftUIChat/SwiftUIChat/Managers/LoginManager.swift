@@ -4,11 +4,7 @@
 import Foundation
 import SwiftUI
 
-extension Notification.Name {
-    static let loggedIn = Notification.Name(rawValue: "LoggedInNotification")
-}
-
-protocol LoginManagerProtocol: AnyObject {
+protocol LoginManagerProtocol: ObservableObject {
     func logIn(_ token: Token)
     func logout()
     var token: Token? { get }
@@ -38,12 +34,12 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
         didSet { store(state: state) }
     }
 
-    let networking: SocketNetworkingProtocol
-
-    init(networking: SocketNetworkingProtocol) {
-        self.networking = networking
-        NotificationCenter.default.addObserver(self, selector: #selector(loggedInNotification(notification:)), name: .loggedIn, object: nil)
-        restore()
+    var networking: SocketNetworkingProtocol? {
+        didSet {
+            if networking != nil {
+                restore()
+            }
+        }
     }
 
     private func restore() {
@@ -51,7 +47,7 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
             return
         }
         let token = Token(token: tokenUuid, userId: userUuid, expires: expiresString)
-        networking.logIn(token: token)
+        networking?.logIn(token: token)
     }
 
     private func store(state: State) {
@@ -67,20 +63,13 @@ class LoginManager: ObservableObject, LoginManagerProtocol {
         }
     }
 
-    @objc func loggedInNotification(notification: NSNotification) {
-        guard let userInfo = notification.userInfo, let token = Token(dict: userInfo) else {
-            return
-        }
-        logIn(token)
-    }
-
     func logIn(_ token: Token) {
         state = .loggedIn(token)
     }
 
     func logout() {
         if let token = state.token {
-            networking.logOut(token: token)
+            networking?.logOut(token: token)
         }
         state = .loggedOut
     }

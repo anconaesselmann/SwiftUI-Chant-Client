@@ -44,6 +44,8 @@
 		97CAF46326D0D27C00B5DA23 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46226D0D27C00B5DA23 /* Request.swift */; };
 		97CAF46526D0E5E200B5DA23 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46426D0E5E200B5DA23 /* String+Extensions.swift */; };
 		97CAF46726D0E62A00B5DA23 /* TextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46626D0E62A00B5DA23 /* TextField+Extensions.swift */; };
+		97CAF46926D2D94F00B5DA23 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46826D2D94F00B5DA23 /* Container.swift */; };
+		97CAF46B26D2DC0200B5DA23 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CAF46A26D2DC0200B5DA23 /* Token.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +109,8 @@
 		97CAF46226D0D27C00B5DA23 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		97CAF46426D0E5E200B5DA23 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		97CAF46626D0E62A00B5DA23 /* TextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextField+Extensions.swift"; sourceTree = "<group>"; };
+		97CAF46826D2D94F00B5DA23 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		97CAF46A26D2DC0200B5DA23 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +170,7 @@
 				97CAF43D26CCFC4100B5DA23 /* Mocks */,
 				976A40BB26CB236A00372210 /* SwiftUIChatApp.swift */,
 				97CAF42F26CBB1FE00B5DA23 /* Constants.swift */,
+				97CAF46826D2D94F00B5DA23 /* Container.swift */,
 				97CAF43126CC4AF000B5DA23 /* Colors.xcassets */,
 				976A40BF26CB236B00372210 /* Assets.xcassets */,
 				976A40C426CB236B00372210 /* Info.plist */,
@@ -228,6 +233,7 @@
 				97CAF46226D0D27C00B5DA23 /* Request.swift */,
 				97CAF46026D0D06500B5DA23 /* ClientRequests.swift */,
 				97CAF45E26D0D05100B5DA23 /* ServerResponse.swift */,
+				97CAF46A26D2DC0200B5DA23 /* Token.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -456,6 +462,7 @@
 				97CAF43426CC65FA00B5DA23 /* Socket.swift in Sources */,
 				976A40ED26CB325E00372210 /* LoginView.swift in Sources */,
 				97CAF43B26CCF65700B5DA23 /* ChatViewViewModel.swift in Sources */,
+				97CAF46B26D2DC0200B5DA23 /* Token.swift in Sources */,
 				97CAF44626CDCF7900B5DA23 /* MessageViewData.swift in Sources */,
 				97CAF3F526CB77CC00B5DA23 /* Date+SI.swift in Sources */,
 				97CAF44226CDC91300B5DA23 /* DateHeaderView.swift in Sources */,
@@ -472,6 +479,7 @@
 				97CAF44826CDD11600B5DA23 /* MessageBodyView.swift in Sources */,
 				97CAF46126D0D06500B5DA23 /* ClientRequests.swift in Sources */,
 				97CAF45726CFAA1D00B5DA23 /* SignupView.swift in Sources */,
+				97CAF46926D2D94F00B5DA23 /* Container.swift in Sources */,
 				97CAF43026CBB1FE00B5DA23 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

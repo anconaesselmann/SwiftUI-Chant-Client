@@ -11,7 +11,7 @@ struct SignupView: View {
     @Binding var showSignup: Bool
 
     let networking: SocketNetworkingProtocol
-    let loginManager: LoginManagerProtocol
+    let loginManager: LoginManager
 
     var body: some View {
         VStack {
@@ -45,6 +45,6 @@ struct SignupView: View {
 struct SignupView_Previews: PreviewProvider {
     @State static var showSignup: Bool = false
     static var previews: some View {
-        SignupView(showSignup: $showSignup, networking: MockNetworking(), loginManager: MockLoginManager())
+        SignupView(showSignup: $showSignup, networking: MockNetworking(), loginManager: LoginManager())
     }
 }
