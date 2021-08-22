@@ -72,6 +72,8 @@ class ChatViewViewModel: ObservableObject {
                 self?.messageHistory.add(message: message)
             case .isTyping(let isTyping):
                 self?.chatPartnerIsTyping = isTyping
+            case .messageRead(let messageId):
+                self?.messageHistory.messageRead(id: messageId)
             }
         }.store(in: &subscriptions)
     }
@@ -82,7 +84,6 @@ class ChatViewViewModel: ObservableObject {
         guard let sender = loginManager.userId else {
             return
         }
-//        let loggedOutUser = LoggedOutUser(name: user.name)
         let message = Message(uuid: uuid, date: date, sender: UUID(uuidString: sender)!, body: body)
         networking.send(message: message)
     }

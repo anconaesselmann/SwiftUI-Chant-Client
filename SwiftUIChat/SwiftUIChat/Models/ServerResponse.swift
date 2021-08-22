@@ -4,7 +4,7 @@
 import Foundation
 
 enum ServerResponseType: Int {
-    case loggedIn, chatMessage, typingStatusUpdate
+    case loggedIn, chatMessage, typingStatusUpdate, messageReceived
 }
 
 struct ChatMessageResponse: Codable {
@@ -31,4 +31,12 @@ extension TypingStatusUpdateResponse {
     var requestType: ServerResponseType {
         .typingStatusUpdate
     }
+}
+
+struct MessageReceivedServerNotification: Codable {
+    let messageId: String
+}
+
+extension MessageReceivedServerNotification {
+    var requestType: ServerResponseType { .messageReceived }
 }

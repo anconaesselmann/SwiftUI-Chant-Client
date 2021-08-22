@@ -4,7 +4,7 @@
 import Foundation
 
 enum ClientRequestType: Int {
-    case signup, emailLogin, tokenLogin, chatMessage, loggedOut, typingStatusUpdate, messageRead
+    case signup, emailLogin, tokenLogin, chatMessage, loggedOut, typingStatusUpdate, messageReceived
 }
 
 struct SignupRequest: Request {
@@ -66,4 +66,12 @@ struct TypingStatusUpdateRequest: Request {
 
 extension TypingStatusUpdateRequest {
     var requestType: ClientRequestType { .typingStatusUpdate }
+}
+
+struct MessageReceivedClientNotification: Request {
+    let messageId: String
+}
+
+extension MessageReceivedClientNotification {
+    var requestType: ClientRequestType { .messageReceived }
 }

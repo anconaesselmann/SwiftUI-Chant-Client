@@ -54,4 +54,11 @@ struct Packet {
         }
         self.init(type: type, data: data)
     }
+
+    func decode<T>() -> T? where T: Decodable {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        print(String(data: data, encoding: .utf8))
+        return try? decoder.decode(T.self, from: data)
+    }
 }

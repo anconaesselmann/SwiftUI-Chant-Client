@@ -13,6 +13,7 @@ struct Message: Hashable, Codable {
     let date: Date
     let sender: UUID
     let body: String
+    var read: Bool = false
 
     func type(for uuid: UUID) -> MessageType {
         uuid.uuidString == self.sender.uuidString ? .sent : .recieved

@@ -8,7 +8,7 @@ class ClientRequestType(Enum):
 	CHAT_MESSAGE = 3
 	LOGGED_OUT = 4
 	TYPING_STATUS_UPDATE = 5
-	MESSAGE_READ = 6
+	MESSAGE_RECEIVED = 6
 
 class NewUserRequest:
 	MESSAGE_TYPE = ClientRequestType.SIGNUP
@@ -91,6 +91,18 @@ class TypingStatusUpdateRequest:
 	def fromJSON(json_data):
 		dictionary = json.loads(json_data.decode('utf-8'))
 		return TypingStatusUpdateRequest(**dictionary)
+
+	def toJSON(self):
+		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
+
+class MessageReceivedClientNotification:
+	MESSAGE_TYPE = ClientRequestType.MESSAGE_RECEIVED
+	def __init__(self, message_id):
+		self.message_id = message_id
+
+	def fromJSON(json_data):
+		dictionary = json.loads(json_data.decode('utf-8'))
+		return MessageReceivedClientNotification(**dictionary)
 
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)

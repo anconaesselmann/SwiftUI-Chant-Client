@@ -5,6 +5,7 @@ class ServerResponseType(Enum):
     LOGGED_IN = 0
     CHAT_MESSAGE = 1
     TYPING_STATUS_UPDATE = 2
+    MESSAGE_RECEIVED = 3
 
 class LoggedInResponse:
     MESSAGE_TYPE = ServerResponseType.LOGGED_IN
@@ -58,3 +59,16 @@ class TypingStatusUpdateResponse:
             "chat_id": self.chat_id.__str__()
         }
         return json.dumps(dictionary, sort_keys=True, indent=None)
+
+class MessageReceivedServerNotification:
+    MESSAGE_TYPE = ServerResponseType.MESSAGE_RECEIVED
+    def __init__(self, message_id):
+        self.message_id = message_id
+
+    def fromJSON(json_data):
+        dictionary = json.loads(json_data.decode('utf-8'))
+        return TokenLoginRequest(**dictionary)
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=None)
+

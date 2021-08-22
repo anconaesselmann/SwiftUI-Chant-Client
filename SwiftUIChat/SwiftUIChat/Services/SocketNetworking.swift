@@ -37,6 +37,7 @@ class SocketNetworking: SocketNetworkingProtocol {
         case received(Message)
         case sent(Message)
         case isTyping(Bool)
+        case messageRead(UUID)
     }
 
     private let messageStatusSubject = PassthroughSubject<MessageStatus, Never>()
@@ -120,13 +121,27 @@ class SocketNetworking: SocketNetworkingProtocol {
         guard let token = self.token else {
             return
         }
-        let request = ChatMessageRequest(senderId: message.sender.uuidString, chatId: UUID().uuidString, messageId: UUID().uuidString, token: token.token, body: message.body)
+        let request = ChatMessageRequest(senderId: message.sender.uuidString, chatId: UUID().uuidString, messageId: message.uuid.uuidString, token: token.token, body: message.body)
         guard let encoded = request.encoded else {
             return
         }
         print("Message sent: ", String(data: encoded, encoding: .utf8) ?? "")
         socket.write(data: encoded) { [weak self] in
             self?.messageStatusSubject.send(.sent(message))
+        }
+    }
+
+    private func sendReceivedReceipt(for message: Message) {
+        guard let token = self.token else {
+            return
+        }
+        let request = MessageReceivedClientNotification(messageId: message.uuid.uuidString)
+        guard let encoded = request.encoded else {
+            return
+        }
+        print("Sending received receipt")
+        socket.write(data: encoded) { _ in
+
         }
     }
 
@@ -169,7 +184,8 @@ class SocketNetworking: SocketNetworkingProtocol {
                     }
                 case .chatMessage:
                     if let message = message(from: packet) {
-                       messageStatusSubject.send(.received(message))
+                        messageStatusSubject.send(.received(message))
+                        sendReceivedReceipt(for: message)
                     } else {
                         print("Could not read chat message")
                     }
@@ -179,6 +195,14 @@ class SocketNetworking: SocketNetworkingProtocol {
                         messageStatusSubject.send(.isTyping(statusUpdate.isTyping))
                     } else {
                         print("Could not read status update")
+                    }
+                case .messageReceived:
+                    if
+                        let receipt: MessageReceivedServerNotification = packet.decode(),
+                        let messageId = UUID(uuidString: receipt.messageId)
+                    {
+                        print("Message read: ", receipt.messageId)
+                        messageStatusSubject.send(.messageRead(messageId))
                     }
                 }
             } catch {
@@ -208,7 +232,7 @@ class SocketNetworking: SocketNetworkingProtocol {
         guard let response = try? decoder.decode(ChatMessageResponse.self, from: packet.data) else {
             return nil
         }
-        return Message(uuid: UUID(), date: Date(), sender: UUID(), body: response.body)
+        return Message(uuid: UUID(uuidString: response.messageId)!, date: Date(), sender: UUID(), body: response.body)
     }
 
     private func token(from packet: Packet) -> Token? {

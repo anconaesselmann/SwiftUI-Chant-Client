@@ -2,6 +2,7 @@
 //
 
 import Combine
+import Foundation
 
 class MockNetworking: SocketNetworkingProtocol {
     var status: AnyPublisher<SocketNetworking.Status, Never> = Just(.connected).eraseToAnyPublisher()
@@ -19,6 +20,7 @@ class MockNetworking: SocketNetworkingProtocol {
 class MockHistory: HistoryProtocol {
     var history: AnyPublisher<[Message], Never> = Just([]).eraseToAnyPublisher()
     func add(message: Message) { }
+    func messageRead(id: UUID) { }
 }
 
 class MockLoginManager: LoginManagerProtocol {

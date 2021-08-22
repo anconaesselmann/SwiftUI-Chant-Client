@@ -14,21 +14,30 @@ struct SentMessageView: View {
     let message: MessageViewData
 
     var body: some View {
-        HStack(spacing: 0) {
-            VStack(alignment: .trailing, spacing: 0) {
-                Group {
-                    if let dateString = message.dateString {
-                        DateHeaderView(dateString: dateString)
+        VStack {
+            HStack(spacing: 0) {
+                VStack(alignment: .trailing, spacing: 0) {
+                    Group {
+                        if let dateString = message.dateString {
+                            DateHeaderView(dateString: dateString)
+                        }
                     }
+                    MessageBodyView(messageBody: message.body)
                 }
-                MessageBodyView(messageBody: message.body)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                .background(
+                    Color.sentMessageBackground
+                        .cornerRadius(.largeCornerRadius)
+                        .shadow(.background))
+                .padding([.leading], .messageOffset)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-            .background(
-                Color.sentMessageBackground
-                    .cornerRadius(.largeCornerRadius)
-                    .shadow(.background))
-            .padding([.leading], .messageOffset)
+            Group {
+                if message.read {
+                    Text("read")
+                } else {
+                    Text("unread")
+                }
+            }.foregroundColor(.textOnBackgroundSubtle)
         }
     }
 }
@@ -45,7 +54,7 @@ struct RecievedMessageView: View {
                         DateHeaderView(dateString: dateString)
                     }
                 }
-//                FromView(fromString: "From: \(message.userName)")
+                //                FromView(fromString: "From: \(message.userName)")
                 MessageBodyView(messageBody: message.body)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

@@ -24,7 +24,7 @@ struct ChatView: View {
                         Group {
                             if viewModel.chatPartnerIsTyping {
                                 Section() {
-                                    MessageView(message: MessageViewData(dateString: nil, type: .recieved, body: "..."))
+                                    MessageView(message: MessageViewData(dateString: nil, type: .recieved, body: "...", read: false))
                                         .flippedUpsideDown()
                                         .listRowInsets(.init(top: .listRowOffset, leading: .listRowOffset, bottom: .listRowOffset, trailing: .listRowOffset))
                                 }

@@ -132,7 +132,7 @@ def connect(client_socket, client_address):
 
 
 # Handles message receiving
-def receive_message(client_socket):
+def receive_message(client_socket, user):
     print("message recieved")
     # try:
     message = read(client_socket = client_socket)
@@ -185,8 +185,14 @@ def receive_message(client_socket):
 
         print("server status update: ", server_status_update)
         return server_status_update
+
+    elif message.message_type == ClientRequestType.MESSAGE_RECEIVED:
+        print("MESSAGE_RECEIVED")
+        request = MessageReceivedClientNotification.fromJSON(json_data = message.data)
+        print("message_id: ", request.message_id)
+        return request
     else:
-        print("Unknown message")
+        print("Unknown message: ", message.message_type)
         return False
 
 while True:
@@ -213,9 +219,12 @@ while True:
             else:
                 print("Not connected")
         else:
+            # Get user by notified socket, so we will know who sent the message
+            user = clients[notified_socket]
+
             # existing socket is sending a message
             print("reading message")
-            message = receive_message(client_socket = notified_socket)
+            message = receive_message(client_socket = notified_socket, user = user)
             print("message recieved")
 
             # If False, client disconnected, cleanup
@@ -229,9 +238,6 @@ while True:
                 del clients[notified_socket]
 
                 continue
-
-            # Get user by notified socket, so we will know who sent the message
-            user = clients[notified_socket]
 
             if isinstance(message, ChatMessageResponse):
                 print(f'Received message from {user.name}: {message.body}')
@@ -249,6 +255,16 @@ while True:
                     # # But don't sent it to sender
                     if client_socket != notified_socket:
                         serialized = serialize(message = message)
+                        print(serialized)
+                        client_socket.send(serialized.encode())
+            elif isinstance(message, MessageReceivedClientNotification):
+                print(f'Message sent {user.name}: {message.message_id}')
+                # Iterate over connected clients and broadcast message
+                for client_socket in clients:
+                    # # But don't sent it to sender
+                    if client_socket != notified_socket:
+                        response = MessageReceivedServerNotification(message_id = message.message_id)
+                        serialized = serialize(message = response)
                         print(serialized)
                         client_socket.send(serialized.encode())
 

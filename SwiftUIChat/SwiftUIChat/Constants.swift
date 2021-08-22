@@ -17,6 +17,8 @@ extension Color {
     static let receivedMessageBackground = Color(UIColor(named: "ReceivedMessageBackground")!)
 
     static let textOnBackground = Color(UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1))
+
+    static let textOnBackgroundSubtle = Color(UIColor(named: "TextOnBackgroundSubtle")!)
 }
 
 extension CGFloat {
