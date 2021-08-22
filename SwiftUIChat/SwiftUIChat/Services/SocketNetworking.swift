@@ -140,9 +140,7 @@ class SocketNetworking: SocketNetworkingProtocol {
             return
         }
         print("Sending received receipt")
-        socket.write(data: encoded) { _ in
-
-        }
+        socket.write(data: encoded)
     }
 
     func updateIsTyping(_ isTyping: Bool) {
@@ -175,7 +173,7 @@ class SocketNetworking: SocketNetworkingProtocol {
                 let packet = try Packet(data)
                 switch packet.type {
                 case .loggedIn:
-                    if let token = token(from: packet) {
+                    if let token: Token = packet.decode() {
                         print(token)
                         self.token = token
                         NotificationCenter.default.post(name: .loggedIn, object: nil, userInfo: token.dict)
@@ -183,14 +181,19 @@ class SocketNetworking: SocketNetworkingProtocol {
                         print("Invalid token")
                     }
                 case .chatMessage:
-                    if let message = message(from: packet) {
+                    if let decoded: ChatMessageResponse = packet.decode() {
+                        let message = Message(
+                            uuid: UUID(uuidString: decoded.messageId)!,
+                            date: Date(),
+                            sender: UUID(),
+                            body: decoded.body)
                         messageStatusSubject.send(.received(message))
                         sendReceivedReceipt(for: message)
                     } else {
                         print("Could not read chat message")
                     }
                 case .typingStatusUpdate:
-                    if let statusUpdate = statusUpdate(from: packet) {
+                    if let statusUpdate: TypingStatusUpdateResponse = packet.decode() {
                         print("Status update: ", statusUpdate)
                         messageStatusSubject.send(.isTyping(statusUpdate.isTyping))
                     } else {
@@ -226,27 +229,6 @@ class SocketNetworking: SocketNetworkingProtocol {
         }
     }
 
-    private func message(from packet: Packet) -> Message? {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let response = try? decoder.decode(ChatMessageResponse.self, from: packet.data) else {
-            return nil
-        }
-        return Message(uuid: UUID(uuidString: response.messageId)!, date: Date(), sender: UUID(), body: response.body)
-    }
-
-    private func token(from packet: Packet) -> Token? {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try? decoder.decode(Token.self, from: packet.data)
-    }
-
-    private func statusUpdate(from packet: Packet) -> TypingStatusUpdateResponse? {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        print(String(data: packet.data, encoding: .utf8))
-        return try? decoder.decode(TypingStatusUpdateResponse.self, from: packet.data)
-    }
 }
 
 struct Token: Codable {
